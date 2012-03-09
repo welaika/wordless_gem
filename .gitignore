@@ -4,6 +4,7 @@
 .config
 .yardoc
 .rvmrc
+.DS_Store
 InstalledFiles
 _yardoc
 coverage
