@@ -1,13 +1,13 @@
-Then /^a WordPress installation should exist$/ do
+Then /^a WordPress installation should exist in directory "([^"]*)"$/ do |dir|
   steps %Q{
     Then the following files should exist:
-      | index.php            |
-      | wp-activate.php      |
-      | wp-config.sample.php |
-      | wp-settings.php      |
+      | #{dir}/index.php            |
+      | #{dir}/wp-activate.php      |
+      | #{dir}/wp-config-sample.php |
+      | #{dir}/wp-settings.php      |
     Then the following directories should exist:
-      | wp-content  |
-      | wp-admin    |
-      | wp-includes |
+      | #{dir}/wp-content  |
+      | #{dir}/wp-admin    |
+      | #{dir}/wp-includes |
   }
 end

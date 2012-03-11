@@ -1,24 +1,17 @@
 # Wordless
 
-The Wordless gem helps you manage your Wordless themes.
+Command line tools to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites. 
+
+WARNING: This gem is in early development and barely does anything useful yet.
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'wordless'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install wordless
 
 ## Usage
 
-TODO: Write usage instructions here
+`wordless wp mysite` creates a `mysite` directory and installs the latest stable release of WordPress.
+`wordless wp --locale=fr_FR --bare` installs the latest French version of WordPress, and removes default plugins and themes.
 
 ## Contributing
 

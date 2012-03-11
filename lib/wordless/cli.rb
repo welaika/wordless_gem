@@ -11,7 +11,7 @@ module Wordless
       download_url, version, locale = Net::HTTP.get('api.wordpress.org', "/core/version-check/1.5/?locale=#{options[:locale]}").split[2,3]
       downloaded_file = Tempfile.new('wordpress')
       begin
-        puts "Downloading WordPress #{version} (#{locale})..."
+        puts "Downloading WordPress #{version} (#{locale})...".green
         `curl #{download_url} > #{downloaded_file.path} && unzip #{downloaded_file.path} -d #{dir_name}`
         subdirectory = Dir["#{dir_name}/*/"].first # This is probably 'wordpress', but don't assume
         FileUtils.mv Dir["#{subdirectory}*"], dir_name # Remove unnecessary directory level
@@ -21,8 +21,10 @@ module Wordless
          downloaded_file.unlink
       end
       
+      puts "Installed WordPress in directory #{dir_name}".green
+      
       if options[:bare]
-        # Remove default themes and plugins
+        puts "Removing default themes and plugins...".green
         dirs = %w(themes plugins).map {|d| "#{dir_name}/wp-content/#{d}"}
         FileUtils.rm_rf dirs
         FileUtils.mkdir dirs
@@ -30,6 +32,9 @@ module Wordless
           FileUtils.cp "#{dir_name}/wp-content/index.php", dir
         end
       end
+      
+      puts "Done.".green
+      
     end
     
   end
