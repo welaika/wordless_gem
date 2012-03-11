@@ -1,9 +1,8 @@
-require 'rubygems'
 require 'thor'
 require 'net/http'
 
 module Wordless
-  class Commands < Thor
+  class CLI < Thor
     
     desc "wp DIR_NAME", "Downloads the latest stable version of WordPress in a new directory DIR_NAME (default is wordpress)"
     method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
@@ -34,6 +33,4 @@ module Wordless
     end
     
   end
-  
-  Commands.start
 end

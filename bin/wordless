@@ -1,3 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'wordless/commands'
+require 'wordless/cli'
+Wordless::CLI.start
