@@ -1,5 +1,6 @@
 require 'thor'
 require 'net/http'
+require 'colored'
 
 module Wordless
   class CLI < Thor
@@ -21,7 +22,7 @@ module Wordless
          downloaded_file.unlink
       end
       
-      puts "Installed WordPress in directory #{dir_name}".green
+      puts %Q{Installed WordPress in directory "#{dir_name}"}.green
       
       if options[:bare]
         puts "Removing default themes and plugins...".green
