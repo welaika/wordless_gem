@@ -10,8 +10,10 @@ WARNING: This gem is in early development and barely does anything useful yet.
 
 ## Usage
 
+`wordless help` shows some help.
 `wordless wp mysite` creates a `mysite` directory and installs the latest stable release of WordPress.
-`wordless wp --locale=fr_FR --bare` installs the latest French version of WordPress, and removes default plugins and themes.
+`wordless wp --locale=fr_FR --bare` installs the French version of WordPress, and removes default plugins and themes.
+`wordless install` installs the Wordless plugin in the current WordPress installation as a git submodule.
 
 ## Contributing
 

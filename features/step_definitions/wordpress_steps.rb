@@ -1,3 +1,10 @@
+Given /^WordPress is already installed$/ do
+  in_current_dir do
+    `git init`
+  end
+  create_dir('wp-content/plugins') # Will do for now
+end
+
 Then /^a WordPress installation should exist in directory "([^"]*)"$/ do |dir|
   steps %Q{
     Then the following files should exist:

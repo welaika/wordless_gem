@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["etienne@molotov.ca"]
   gem.description   = %q{Wordless}
   gem.summary       = %q{Manage Wordless themes.}
-  gem.homepage      = "http://github.com/etienne/wordless"
+  gem.homepage      = "http://github.com/etienne/wordless_gem"
   
   gem.add_dependency "thor"
   gem.add_dependency "colored"
