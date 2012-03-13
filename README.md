@@ -1,6 +1,6 @@
 # Wordless
 
-Command line tools to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites. 
+A command line tool to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites. 
 
 WARNING: This gem is in early development and barely does anything useful yet.
 
@@ -14,6 +14,12 @@ WARNING: This gem is in early development and barely does anything useful yet.
 `wordless wp mysite` creates a `mysite` directory and installs the latest stable release of WordPress.
 `wordless wp --locale=fr_FR --bare` installs the French version of WordPress, and removes default plugins and themes.
 `wordless install` installs the Wordless plugin in the current WordPress installation as a git submodule.
+
+## Caveats
+
+- If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
+- Currently, the Wordless plugin is installed as a git submodule, so your WordPress directory must be a git repo.
+- The Cucumber features run very slowly because they actually download WordPress and the Wordless plugin. I haven’t figured out how to properly stub the downloads.
 
 ## Contributing
 
