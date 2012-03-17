@@ -68,19 +68,19 @@ module Wordless
     desc "install", "install the Wordless plugin into an existing WordPress installation as a git submodule"
     def install
       unless git_installed?
-        puts "Git is not available. Please install git.".red
+        error "Git is not available. Please install git."
         return
       end
 
       unless File.directory? 'wp-content/plugins'
-        puts "Directory 'wp-content/plugins' not found. Make sure you're at the root level of a WordPress installation.".red
+        error "Directory 'wp-content/plugins' not found. Make sure you're at the root level of a WordPress installation."
         return
       end
 
       if system "git submodule add git://github.com/welaika/wordless.git wp-content/plugins/wordless && git submodule init && git submodule update"
-        puts "Installed Wordless plugin.".green
+        success "Installed Wordless plugin."
       else
-        puts "There was an error installing the Wordless plugin.".red
+        error "There was an error installing the Wordless plugin."
       end
     end
   end
