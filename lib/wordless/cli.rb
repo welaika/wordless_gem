@@ -1,11 +1,13 @@
 require 'thor'
+# require 'thor/shell/basic'
 require 'net/http'
-require 'colored'
 require 'rbconfig'
 require 'tempfile'
+require 'wordless/cli_helper'
 
 module Wordless
   class CLI < Thor
+    include Wordless::CLIHelper
     
     desc "wp DIR_NAME", "download the latest stable version of WordPress in a new directory DIR_NAME (default is wordpress)"
     method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
@@ -16,25 +18,25 @@ module Wordless
       begin
         puts "Downloading WordPress #{version} (#{locale})..."
 
-        unless download(download_url, downloaded_file)
-          puts "Couldn't download WordPress.".red
+        unless download(download_url, downloaded_file.path)
+          error "Couldn't download WordPress."
           return
         end
         
         unless unzip(downloaded_file.path, dir_name)
-          puts "Couldn't unzip WordPress.".red
+          error "Couldn't unzip WordPress."
           return
         end
         
         subdirectory = Dir["#{dir_name}/*/"].first # This is probably 'wordpress', but don't assume
         FileUtils.mv Dir["#{subdirectory}*"], dir_name # Remove unnecessary directory level
-        FileUtils.rmdir subdirectory
+        Dir.delete subdirectory
       ensure
          downloaded_file.close
          downloaded_file.unlink
       end
       
-      puts %Q{Installed WordPress in directory "#{dir_name}".}.green
+      success %Q{Installed WordPress in directory "#{dir_name}".}
       
       if options[:bare]
         dirs = %w(themes plugins).map {|d| "#{dir_name}/wp-content/#{d}"}
@@ -43,17 +45,17 @@ module Wordless
         dirs.each do |dir|
           FileUtils.cp "#{dir_name}/wp-content/index.php", dir
         end
-        puts "Removed default themes and plugins.".green
+        success "Removed default themes and plugins."
       end
       
       if git_installed?
-        if system 'git init'
-          puts "Initialized git repository.".green
+        if system "cd #{dir_name} && git init"
+          success "Initialized git repository."
         else
-          puts "Couldn't initialize git repository.".red
+          error "Couldn't initialize git repository."
         end
       else
-        puts "Didn't initialize git repository because git isn't installed.".yellow
+        warning "Didn't initialize git repository because git isn't installed."
       end
     end
     

@@ -1,12 +1,14 @@
 require 'wordless/cli'
-require 'wordless/cli_helper'
-# require 'thor'
-# require 'net/http'
-# require 'colored'
-# require 'rbconfig'
+require 'fakeweb'
+require 'thor'
+
+
+# Set shell to basic
+# $0 = "thor"
+# $thor_runner = true
+# ARGV.clear
+# Thor::Base.shell = Thor::Shell::Basic
 
 RSpec.configure do |config|
-  # config.before(:each) do
-  #   $stdout = StringIO.new
-  # end
+  FakeWeb.allow_net_connect = false
 end
