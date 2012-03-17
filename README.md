@@ -6,7 +6,7 @@ WARNING: This gem is in early development and barely does anything useful yet.
 
 ## Installation
 
-    $ gem install wordless
+    gem install wordless
 
 ## Usage
 
