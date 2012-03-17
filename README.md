@@ -19,6 +19,8 @@ WARNING: This gem is in early development and barely does anything useful yet.
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Currently, the Wordless plugin is installed as a git submodule, so your WordPress directory must be a git repo.
+- Has not been tested under Windows.
+- Running the specs is very verbose because of terminal output. If anyone knows how to silence it, a pull request will be very appreciated.
 
 ## Contributing
 

@@ -41,7 +41,7 @@ describe Wordless::CLIHelper do
     end
     
     after(:each) do
-      File.delete('tmp/unzip/zipped_file') if File.exists? 'tmp/unzip/zipped_file'
+      FileUtils.rm_rf('tmp/unzip') if File.directory? 'tmp/unzip'
     end
   end
   

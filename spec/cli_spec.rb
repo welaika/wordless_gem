@@ -52,16 +52,19 @@ describe Wordless::CLI do
   end
   
   context "#install" do
-    # Disabled for now because this example currently hits the network, needs to be stubbed
-
-    # context "with a valid WordPress installation" do
-    #   it "installs the Wordless plugin" do
-    #     Wordless::CLI.start ['wp']
-    #     Dir.chdir 'wordpress'
-    #     Wordless::CLI.start ['install']
-    #     File.directory?('wp-content/plugins/wordless').should eq true
-    #   end      
-    # end
+    before :each do
+      # Stub this way because otherwise Thor complains about a task without a desc
+      module Wordless; class CLI; def wordless_repo; File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless_stub')); end; end; end
+    end
+    
+    context "with a valid WordPress installation" do
+      it "installs the Wordless plugin" do
+        Wordless::CLI.start ['wp']
+        Dir.chdir 'wordpress'
+        Wordless::CLI.start ['install']
+        File.directory?('wp-content/plugins/wordless').should eq true
+      end      
+    end
     
     context "without a valid WordPress installation" do
       content = capture(:stdout) { Wordless::CLI.start ['install'] }

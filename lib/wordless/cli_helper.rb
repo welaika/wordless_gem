@@ -34,5 +34,9 @@ module Wordless
       void = RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
       system "git --version >>#{void} 2>&1"
     end
+    
+    def add_git_repo(repo, destination)
+      system "git clone #{repo} #{destination}"
+    end
   end
 end

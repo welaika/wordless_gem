@@ -9,6 +9,11 @@ module Wordless
   class CLI < Thor
     include Wordless::CLIHelper
     
+    def wordless_repo
+      raise "This should not run"
+      'git://github.com/welaika/wordless.git'
+    end
+    
     desc "wp DIR_NAME", "download the latest stable version of WordPress in a new directory DIR_NAME (default is wordpress)"
     method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
     method_option :bare, :aliases => "-b", :desc => "Remove default themes and plugins"
@@ -77,7 +82,7 @@ module Wordless
         return
       end
 
-      if system "git submodule add git://github.com/welaika/wordless.git wp-content/plugins/wordless && git submodule init && git submodule update"
+      if add_git_repo wordless_repo, 'wp-content/plugins/wordless'
         success "Installed Wordless plugin."
       else
         error "There was an error installing the Wordless plugin."
