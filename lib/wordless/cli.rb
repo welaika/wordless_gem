@@ -9,10 +9,12 @@ module Wordless
   class CLI < Thor
     include Wordless::CLIHelper
     
-    def wordless_repo
-      'git://github.com/welaika/wordless.git'
+    no_tasks do
+      def wordless_repo
+        'git://github.com/welaika/wordless.git'
+      end
     end
-    
+  
     desc "wp DIR_NAME", "download the latest stable version of WordPress in a new directory DIR_NAME (default is wordpress)"
     method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
     method_option :bare, :aliases => "-b", :desc => "Remove default themes and plugins"
@@ -69,7 +71,7 @@ module Wordless
       # upcoming
     end
     
-    desc "install", "install the Wordless plugin into an existing WordPress installation as a git submodule"
+    desc "install", "install the Wordless plugin into an existing WordPress installation"
     def install
       unless git_installed?
         error "Git is not available. Please install git."
@@ -85,6 +87,22 @@ module Wordless
         success "Installed Wordless plugin."
       else
         error "There was an error installing the Wordless plugin."
+      end
+    end
+    
+    desc "theme NAME", "create a new Wordless theme NAME"
+    def theme(name)
+      unless File.directory? 'wp-content/themes'
+        error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
+        return
+      end
+      
+      # Run PHP helper script
+      if system "php #{File.join(File.expand_path(File.dirname(__FILE__)), 'theme_builder_helper.php')} #{name}"
+        success "Created a new Wordless theme in 'wp-content/themes/#{name}'"
+      else
+        error "Couldn't create Wordless theme."
+        return
       end
     end
   end

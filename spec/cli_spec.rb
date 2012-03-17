@@ -52,11 +52,6 @@ describe Wordless::CLI do
   end
   
   context "#install" do
-    before :each do
-      # Stub this way because otherwise Thor complains about a task without a desc
-      module Wordless; class CLI; def wordless_repo; File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless_stub')); end; end; end
-    end
-    
     context "with a valid WordPress installation" do
       it "installs the Wordless plugin" do
         Wordless::CLI.start ['wp']
@@ -67,8 +62,33 @@ describe Wordless::CLI do
     end
     
     context "without a valid WordPress installation" do
-      content = capture(:stdout) { Wordless::CLI.start ['install'] }
-      content.should =~ %r|Directory 'wp-content/plugins' not found|
+      it "fails to install the Wordless plugin" do
+        content = capture(:stdout) { Wordless::CLI.start ['install'] }
+        content.should =~ %r|Directory 'wp-content/plugins' not found|
+      end
+    end
+  end
+  
+  context "#theme" do
+    context "with a valid WordPress installation and the Wordless plugin" do
+      before :each do
+        Wordless::CLI.start ['wp']
+        Dir.chdir 'wordpress'
+        Wordless::CLI.start ['install']
+      end
+      
+      it "installs a Wordless theme" do
+        Wordless::CLI.start ['theme', 'mytheme']
+        File.directory?('wp-content/themes/mytheme').should eq true
+        File.exists?('wp-content/themes/mytheme/index.php').should eq true
+      end
+    end
+    
+    context "without a valid WordPress installation" do
+      it "fails to create a Wordless theme" do
+        content = capture(:stdout) { Wordless::CLI.start ['theme', 'mytheme'] }
+        content.should =~ %r|Directory 'wp-content/themes' not found|
+      end
     end
   end
   

@@ -12,6 +12,20 @@ require 'thor'
 RSpec.configure do |config|
   FakeWeb.allow_net_connect = false
   
+  # Stub Wordless::CLI#wordless_repo to avoid hitting the network when testing Wordless installation
+  # FIXME - Need to be able to selectively stub this
+  # config.before(:each, :stub_wordless_install => true) do
+  #   module Wordless
+  #     class CLI
+  #       no_tasks do
+  #         def wordless_repo
+  #           File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless_stub'))
+  #         end
+  #       end
+  #     end
+  #   end
+  # end
+  
   def capture(stream)
     begin
       stream = stream.to_s
@@ -21,7 +35,6 @@ RSpec.configure do |config|
     ensure
       eval("$#{stream} = #{stream.upcase}")
     end
-
     result
   end
 end

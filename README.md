@@ -10,16 +10,33 @@ WARNING: This gem is in early development and barely does anything useful yet.
 
 ## Usage
 
-- `wordless help` shows some help.
-- `wordless wp mysite` creates a `mysite` directory and installs the latest stable release of WordPress.
-- `wordless wp --locale=fr_FR --bare` installs the French version of WordPress, and removes default plugins and themes.
-- `wordless install` installs the Wordless plugin in the current WordPress installation
+Get some help:
+
+    wordless help
+
+Install the latest stable release of WordPress in directory `mysite`. You can also specify a locale:
+
+    wordless wp mysite
+    wordless wp mysite --locale=fr_FR
+
+If you don't want the default plugins and themes, use the `--bare` (or `-b`) option:
+
+    wordless wp --bare
+
+Install the Wordless plugin in the current WordPress installation (this currently installs from GitHub):
+
+    wordless install
+
+Create a new Wordless theme:
+
+    wordless theme mytheme
 
 ## Caveats
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Has not been tested under Windows.
 - Running the specs is very verbose because of terminal output. If anyone knows how to silence it, a pull request will be very appreciated.
+- Specs that test installation of the plugin actually download the plugin from GitHub. This makes the specs a bit slow to run.
 
 ## Contributing
 
