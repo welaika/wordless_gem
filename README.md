@@ -2,39 +2,38 @@
 
 A command line tool to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites. 
 
-WARNING: This gem is in early development and barely does anything useful yet.
-
 ## Installation
 
     gem install wordless
 
 ## Usage
 
-Get some help:
+Create a new Wordless-enabled WordPress site in directory `mysite`. This downloads the latest stable release of WordPress (you can also specify a locale):
 
-    wordless help
+    wordless new mysite
+    wordless new mysite --locale=fr_FR
 
-Install the latest stable release of WordPress in directory `mysite`. You can also specify a locale:
+If you already have WordPress installed, you can install the Wordless plugin (this currently installs from the master branch on GitHub):
+
+    wordless install
+
+Once Wordless is installed, you can create a new Wordless theme:
+
+    wordless theme mytheme
+
+You can also simply install the latest stable release of WordPress, with an optional locale:
 
     wordless wp mysite
     wordless wp mysite --locale=fr_FR
 
-If you don't want the default plugins and themes, use the `--bare` (or `-b`) option:
+Get some help:
 
-    wordless wp --bare
-
-Install the Wordless plugin in the current WordPress installation (this currently installs from GitHub):
-
-    wordless install
-
-Create a new Wordless theme:
-
-    wordless theme mytheme
+    wordless help
 
 ## Caveats
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
-- Has not been tested under Windows.
+- Only tested on Mac OS X
 - Specs that test installation of the plugin actually download the plugin from GitHub. This makes the specs a bit slow to run.
 
 ## Contributing

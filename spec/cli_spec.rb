@@ -18,6 +18,17 @@ describe Wordless::CLI do
     Dir.chdir('tmp')
   end
   
+  context "#new" do
+    it "downloads a copy of WordPress, installs Wordless and creates a theme" do
+      Wordless::CLI.start ['new', 'myapp']
+      File.exists?('wp-content/index.php').should eq true
+      (File.exists?('wp-content/plugins/plugin.php') || File.directory?('wp-content/themes/theme')).should eq false
+      File.directory?('wp-content/plugins/wordless').should eq true
+      File.directory?('wp-content/themes/myapp').should eq true
+      File.exists?('wp-content/themes/myapp/index.php').should eq true
+    end
+  end
+  
   context "#wp" do
     context "with no arguments" do
       it "downloads a copy of WordPress" do
@@ -77,7 +88,7 @@ describe Wordless::CLI do
         Wordless::CLI.start ['install']
       end
       
-      it "installs a Wordless theme" do
+      it "creates a Wordless theme" do
         Wordless::CLI.start ['theme', 'mytheme']
         File.directory?('wp-content/themes/mytheme').should eq true
         File.exists?('wp-content/themes/mytheme/index.php').should eq true

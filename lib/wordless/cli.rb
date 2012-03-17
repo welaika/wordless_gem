@@ -15,7 +15,16 @@ module Wordless
         'git://github.com/welaika/wordless.git'
       end
     end
-  
+    
+    desc "new NAME", "download WordPress in directory NAME, install the Wordless plugin and create a Wordless theme"
+    method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
+    def new(name)
+      invoke('wp', [name], :bare => true, :locale => options['locale'])
+      Dir.chdir(name)
+      Wordless::CLI.new.invoke(:install)
+      invoke('theme', [name])
+    end
+    
     desc "wp DIR_NAME", "download the latest stable version of WordPress in a new directory DIR_NAME (default is wordpress)"
     method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
     method_option :bare, :aliases => "-b", :desc => "Remove default themes and plugins"
@@ -64,12 +73,6 @@ module Wordless
       else
         warning "Didn't initialize git repository because git isn't installed."
       end
-    end
-    
-    desc "new NAME", "download WordPress in directory NAME, install the Wordless plugin and create a Wordless theme"
-    method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
-    def new(name)
-      # upcoming
     end
     
     desc "install", "install the Wordless plugin into an existing WordPress installation"
