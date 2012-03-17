@@ -35,7 +35,6 @@ Create a new Wordless theme:
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Has not been tested under Windows.
-- Running the specs is very verbose because of terminal output. If anyone knows how to silence it, a pull request will be very appreciated.
 - Specs that test installation of the plugin actually download the plugin from GitHub. This makes the specs a bit slow to run.
 
 ## Contributing

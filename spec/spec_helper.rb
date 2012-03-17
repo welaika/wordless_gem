@@ -2,7 +2,6 @@ require 'wordless/cli'
 require 'fakeweb'
 require 'thor'
 
-
 # Set shell to basic
 # $0 = "thor"
 # $thor_runner = true
@@ -11,6 +10,8 @@ require 'thor'
 
 RSpec.configure do |config|
   FakeWeb.allow_net_connect = false
+  
+  $stdout = StringIO.new
   
   # Stub Wordless::CLI#wordless_repo to avoid hitting the network when testing Wordless installation
   # FIXME - Need to be able to selectively stub this

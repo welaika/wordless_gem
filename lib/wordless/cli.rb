@@ -7,6 +7,7 @@ require 'wordless/cli_helper'
 
 module Wordless
   class CLI < Thor
+    include Thor::Actions
     include Wordless::CLIHelper
     
     no_tasks do
@@ -55,7 +56,7 @@ module Wordless
       end
       
       if git_installed?
-        if system "cd #{dir_name} && git init"
+        if run "cd #{dir_name} && git init", :verbose => false, :capture => true
           success "Initialized git repository."
         else
           error "Couldn't initialize git repository."

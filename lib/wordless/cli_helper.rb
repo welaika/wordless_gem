@@ -26,7 +26,7 @@ module Wordless
     end
 
     def unzip(file, destination)
-      system "unzip #{file} -d #{destination}"
+      run "unzip #{file} -d #{destination}", :verbose => false, :capture => true
     end
 
     def git_installed?
@@ -36,7 +36,7 @@ module Wordless
     end
     
     def add_git_repo(repo, destination)
-      system "git clone #{repo} #{destination}"
+      run "git clone #{repo} #{destination}", :verbose => false, :capture => true
     end
   end
 end
