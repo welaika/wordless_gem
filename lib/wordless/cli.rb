@@ -2,6 +2,7 @@ require 'thor'
 require 'net/http'
 require 'colored'
 require 'rbconfig'
+require 'tempfile'
 
 module Wordless
   class CLI < Thor
@@ -14,7 +15,17 @@ module Wordless
       downloaded_file = Tempfile.new('wordpress')
       begin
         puts "Downloading WordPress #{version} (#{locale})..."
-        `curl #{download_url} > #{downloaded_file.path} && unzip #{downloaded_file.path} -d #{dir_name}`
+
+        unless download(download_url, downloaded_file)
+          puts "Couldn't download WordPress.".red
+          return
+        end
+        
+        unless unzip(downloaded_file.path, dir_name)
+          puts "Couldn't unzip WordPress.".red
+          return
+        end
+        
         subdirectory = Dir["#{dir_name}/*/"].first # This is probably 'wordpress', but don't assume
         FileUtils.mv Dir["#{subdirectory}*"], dir_name # Remove unnecessary directory level
         FileUtils.rmdir subdirectory
@@ -35,8 +46,6 @@ module Wordless
         puts "Removed default themes and plugins.".green
       end
       
-      # http://stackoverflow.com/questions/4597490/platform-independent-way-of-detecting-if-git-is-installed
-      void = RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
       if git_installed?
         if system 'git init'
           puts "Initialized git repository.".green
@@ -48,7 +57,7 @@ module Wordless
       end
     end
     
-    desc "new [NAME]", "download WordPress in directory [NAME], install the Wordless plugin and create a Wordless theme"
+    desc "new NAME", "download WordPress in directory NAME, install the Wordless plugin and create a Wordless theme"
     method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
     def new(name)
       # upcoming
@@ -68,14 +77,9 @@ module Wordless
 
       if system "git submodule add git://github.com/welaika/wordless.git wp-content/plugins/wordless && git submodule init && git submodule update"
         puts "Installed Wordless plugin.".green
+      else
+        puts "There was an error installing the Wordless plugin.".red
       end
-    end
-    
-    private
-    
-    def git_installed?
-      void = RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
-      system "git --version >>#{void} 2>&1"
     end
   end
 end

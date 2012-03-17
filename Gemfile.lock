@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wordless (0.0.1)
+    wordless (0.0.2)
       colored
       thor
 
@@ -24,6 +24,7 @@ GEM
       json (>= 1.4.6)
       term-ansicolor (>= 1.0.6)
     diff-lcs (1.1.3)
+    fakeweb (1.3.0)
     ffi (1.0.11)
     gherkin (2.9.0)
       json (>= 1.4.6)
@@ -45,5 +46,6 @@ PLATFORMS
 DEPENDENCIES
   aruba
   cucumber
+  fakeweb
   rspec
   wordless!
