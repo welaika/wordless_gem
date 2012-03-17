@@ -102,7 +102,7 @@ module Wordless
       end
       
       # Run PHP helper script
-      if system "php #{File.join(File.expand_path(File.dirname(__FILE__)), 'theme_builder_helper.php')} #{name}"
+      if system "php #{File.join(File.expand_path(File.dirname(__FILE__)), 'theme_builder.php')} #{name}"
         success "Created a new Wordless theme in 'wp-content/themes/#{name}'"
       else
         error "Couldn't create Wordless theme."
