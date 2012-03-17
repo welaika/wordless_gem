@@ -19,7 +19,6 @@ WARNING: This gem is in early development and barely does anything useful yet.
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Currently, the Wordless plugin is installed as a git submodule, so your WordPress directory must be a git repo.
-- The Cucumber features run very slowly because they actually download WordPress and the Wordless plugin. I haven’t figured out how to properly stub the downloads.
 
 ## Contributing
 

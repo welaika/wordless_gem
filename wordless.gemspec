@@ -9,11 +9,8 @@ Gem::Specification.new do |gem|
   gem.homepage      = "http://github.com/etienne/wordless_gem"
   
   gem.add_dependency "thor"
-  gem.add_dependency "colored"
   
   gem.add_development_dependency 'rspec'
-  gem.add_development_dependency "cucumber"
-  gem.add_development_dependency "aruba"
   gem.add_development_dependency 'fakeweb'
   
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
