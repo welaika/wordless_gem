@@ -10,7 +10,6 @@ module Wordless
     include Wordless::CLIHelper
     
     def wordless_repo
-      raise "This should not run"
       'git://github.com/welaika/wordless.git'
     end
     
