@@ -10,6 +10,8 @@ module Wordless
     include Thor::Actions
     include Wordless::CLIHelper
     
+    @@lib_dir = File.expand_path(File.dirname(__FILE__))
+    
     no_tasks do
       def wordless_repo
         'git://github.com/welaika/wordless.git'
@@ -102,11 +104,20 @@ module Wordless
       end
       
       # Run PHP helper script
-      if system "php #{File.join(File.expand_path(File.dirname(__FILE__)), 'theme_builder.php')} #{name}"
-        success "Created a new Wordless theme in 'wp-content/themes/#{name}'"
+      if system "php #{File.join(@@lib_dir, 'theme_builder.php')} #{name}"
+        success "Created a new Wordless theme in 'wp-content/themes/#{name}'."
       else
         error "Couldn't create Wordless theme."
         return
+      end
+    end
+    
+    desc "compile", "compile static assets"
+    def compile
+      if system "php #{File.join(@@lib_dir, 'compile_assets.php')}"
+        success "Compiled static assets."
+      else
+        error "Couldn't compile static assets."
       end
     end
   end

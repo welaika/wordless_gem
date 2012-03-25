@@ -103,6 +103,20 @@ describe Wordless::CLI do
     end
   end
   
+  context "#compile", :now => true do
+    context "with a valid Wordless installation" do
+      before :each do
+        Wordless::CLI.start ['new', 'myapp']
+      end
+      
+      it "compiles static assets" do
+        Wordless::CLI.start ['compile']
+        File.exists?('wp-content/themes/myapp/assets/stylesheets/screen.css').should eq true
+        File.exists?('wp-content/themes/myapp/assets/javascripts/application.js').should eq true
+      end
+    end
+  end
+  
   after :each do
     Dir.chdir(@original_wd)
     %w(tmp/wordpress tmp/myapp).each do |dir|
