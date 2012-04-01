@@ -21,6 +21,10 @@ Once Wordless is installed, you can create a new Wordless theme:
 
     wordless theme mytheme
 
+Compile your site's static assets:
+
+    wordless compile
+
 You can also simply install the latest stable release of WordPress, with an optional locale:
 
     wordless wp mysite

@@ -4,7 +4,7 @@ require 'wordless_bridge.php';
 
 class ThemeBuilder extends WordlessBridge {
   public static function start() {
-    global $argv;
+    global $argv, $theme_name;
     
     parent::initialize();
     
