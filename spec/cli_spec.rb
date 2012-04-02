@@ -103,7 +103,7 @@ describe Wordless::CLI do
     end
   end
   
-  context "#compile", :now => true do
+  context "#compile" do
     context "with a valid Wordless installation" do
       before :each do
         Wordless::CLI.start ['new', 'myapp']
