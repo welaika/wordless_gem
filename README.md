@@ -25,11 +25,6 @@ Compile your site's static assets:
 
     wordless compile
 
-You can also simply install the latest stable release of WordPress, with an optional locale:
-
-    wordless wp mysite
-    wordless wp mysite --locale=fr_FR
-
 Get some help:
 
     wordless help
