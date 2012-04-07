@@ -29,43 +29,10 @@ describe Wordless::CLI do
     end
   end
   
-  context "#wp" do
-    context "with no arguments" do
-      it "downloads a copy of WordPress" do
-        Wordless::CLI.start ['wp']
-        File.exists?('wordpress/wp-content/index.php').should eq true
-      end
-
-      it "initializes a git repository" do
-        Wordless::CLI.start ['wp']
-        File.directory?('wordpress/.git').should eq true
-      end
-      
-      it "doesn't leave a stray 'wordpress' directory" do
-        Wordless::CLI.start ['wp']
-        File.directory?('wordpress/wordpress').should eq false
-      end
-    end
-    
-    context "with a custom directory name" do
-      it "downloads a copy of WordPress in directory 'myapp'" do
-        Wordless::CLI.start ['wp', 'myapp']
-        File.exists?('myapp/wp-content/index.php').should eq true
-      end
-    end
-    
-    context "with the 'bare' option" do
-      it "downloads a copy of WordPress and removes default plugins and themes" do
-        Wordless::CLI.start ['wp', '--bare']
-        (File.exists?('wordpress/wp-content/plugins/plugin.php') || File.directory?('wordpress/wp-content/themes/theme')).should eq false
-      end
-    end
-  end
-  
   context "#install" do
     context "with a valid WordPress installation" do
       it "installs the Wordless plugin" do
-        Wordless::CLI.start ['wp']
+        WordPressTools::CLI.start ['new']
         Dir.chdir 'wordpress'
         Wordless::CLI.start ['install']
         File.directory?('wp-content/plugins/wordless').should eq true
@@ -83,7 +50,7 @@ describe Wordless::CLI do
   context "#theme" do
     context "with a valid WordPress installation and the Wordless plugin" do
       before :each do
-        Wordless::CLI.start ['wp']
+        WordPressTools::CLI.start ['new']
         Dir.chdir 'wordpress'
         Wordless::CLI.start ['install']
       end
