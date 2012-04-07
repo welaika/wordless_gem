@@ -4,7 +4,7 @@ require File.expand_path('../lib/wordless/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Étienne Després"]
   gem.email         = ["etienne@molotov.ca"]
-  gem.description   = %q{Command-line tools to manage Wordless themes.}
+  gem.description   = %q{Command line tool to manage Wordless themes.}
   gem.summary       = %q{Manage Wordless themes.}
   gem.homepage      = "http://github.com/etienne/wordless_gem"
   
