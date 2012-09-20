@@ -1,8 +1,17 @@
 require 'spec_helper'
 
+module Wordless
+  class CLI
+    no_tasks do
+      def wordless_repo
+        File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless'))
+      end
+    end
+  end
+end
+
 describe Wordless::CLI do
   before :each do
-    # $stdout = StringIO.new
     @original_wd = Dir.pwd
     wp_api_response = <<-eof
       upgrade
@@ -17,7 +26,7 @@ describe Wordless::CLI do
     FakeWeb.register_uri(:get, "http://wordpress.org/wordpress-3.3.1.zip", :body => File.expand_path('spec/fixtures/wordpress_stub.zip'))
     Dir.chdir('tmp')
   end
-  
+
   context "#new" do
     it "downloads a copy of WordPress, installs Wordless and creates a theme" do
       Wordless::CLI.start ['new', 'myapp']
@@ -28,7 +37,7 @@ describe Wordless::CLI do
       File.exists?('wp-content/themes/myapp/index.php').should eq true
     end
   end
-  
+
   context "#install" do
     context "with a valid WordPress installation" do
       it "installs the Wordless plugin" do
@@ -36,9 +45,9 @@ describe Wordless::CLI do
         Dir.chdir 'wordpress'
         Wordless::CLI.start ['install']
         File.directory?('wp-content/plugins/wordless').should eq true
-      end      
+      end
     end
-    
+
     context "without a valid WordPress installation" do
       it "fails to install the Wordless plugin" do
         content = capture(:stdout) { Wordless::CLI.start ['install'] }
@@ -46,7 +55,7 @@ describe Wordless::CLI do
       end
     end
   end
-  
+
   context "#theme" do
     context "with a valid WordPress installation and the Wordless plugin" do
       before :each do
@@ -54,14 +63,14 @@ describe Wordless::CLI do
         Dir.chdir 'wordpress'
         Wordless::CLI.start ['install']
       end
-      
+
       it "creates a Wordless theme" do
         Wordless::CLI.start ['theme', 'mytheme']
         File.directory?('wp-content/themes/mytheme').should eq true
         File.exists?('wp-content/themes/mytheme/index.php').should eq true
       end
     end
-    
+
     context "without a valid WordPress installation" do
       it "fails to create a Wordless theme" do
         content = capture(:stdout) { Wordless::CLI.start ['theme', 'mytheme'] }
@@ -69,13 +78,13 @@ describe Wordless::CLI do
       end
     end
   end
-  
+
   context "#compile" do
     context "with a valid Wordless installation" do
       before :each do
         Wordless::CLI.start ['new', 'myapp']
       end
-      
+
       it "compiles static assets" do
         Wordless::CLI.start ['compile']
         File.exists?('wp-content/themes/myapp/assets/stylesheets/screen.css').should eq true
@@ -83,7 +92,7 @@ describe Wordless::CLI do
       end
     end
   end
-  
+
   after :each do
     Dir.chdir(@original_wd)
     %w(tmp/wordpress tmp/myapp).each do |dir|

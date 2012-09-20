@@ -33,7 +33,23 @@ Get some help:
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Only tested on Mac OS X
-- Specs that test installation of the plugin actually download the plugin from GitHub. This makes the specs a bit slow to run.
+
+## Tests
+Clone the wordless repo inside spec/fixtures/wordless:
+
+    git clone https://github.com/welaika/wordless.git spec/fixtures/wordless && cd spec/fixtures/wordless
+
+Set the compass and ruby paths inside
+
+    vim theme_builder/vanilla_theme/config/initializers/wordless_preferences.php
+
+Commit your changes
+
+    git commit -am "fixed wordless paths"
+
+Go back to the wordless_gem directory and have fun with:
+
+    cd - && rspec spec
 
 ## Contributing
 
