@@ -150,15 +150,16 @@ describe Wordless::CLI do
       Wordless::CLI.start ['new', 'myapp']
     end
 
-    let(:cli) { Wordless::CLI.new }
+    let(:file) { 'shrubbery' }
 
     it "should deploy via the deploy command" do
       Wordless::CLI.class_variable_set :@@config, {
-        :deploy_command => "echo spam"
+        :deploy_command => "touch #{file}"
       }
 
-      cli.should_receive("system").with("echo spam")
-      cli.deploy
+      Wordless::CLI.start ['deploy']
+
+      File.exists?(file).should be_true
     end
   end
 end
