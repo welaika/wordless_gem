@@ -6,6 +6,7 @@ RSpec.configure do |config|
   FakeWeb.allow_net_connect = false
   FileUtils.mkdir('tmp') unless File.directory? 'tmp'
 
+  # utility to log commands output or errors
   def capture(stream)
     begin
       stream = stream.to_s

@@ -15,15 +15,15 @@ describe Wordless::CLIHelper do
 
     it "downloads a file to the specified location" do
       @cli.download(@valid_url, @tempfile.path)
-      open(@tempfile.path).read.should eq("Download test")
+      open(@tempfile.path).read.should == "Download test"
     end
 
     it "returns true on success" do
-      @cli.download(@valid_url, @tempfile.path).should eq true
+      @cli.download(@valid_url, @tempfile.path).should be_true
     end
 
     it "returns false on failure" do
-      @cli.download("http://an.invalid.url", @tempfile.path).should eq false
+      @cli.download("http://an.invalid.url", @tempfile.path).should be_false
     end
 
     after(:each) do
@@ -34,7 +34,7 @@ describe Wordless::CLIHelper do
   context "::unzip" do
     it "unzips a file" do
       @cli.unzip(File.expand_path('spec/fixtures/zipped_file.zip'), 'tmp/unzip')
-      File.exists?('tmp/unzip/zipped_file').should be true
+      File.exists?('tmp/unzip/zipped_file').should be_true
     end
 
     after(:each) do

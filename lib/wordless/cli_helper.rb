@@ -13,7 +13,7 @@ module Wordless
     def warning(message)
       say message, :yellow
     end
-    
+
     def download(url, destination)
       begin
         f = open(destination, "wb")
@@ -34,7 +34,7 @@ module Wordless
       void = RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
       system "git --version >>#{void} 2>&1"
     end
-    
+
     def add_git_repo(repo, destination)
       run "git clone #{repo} #{destination}", :verbose => false, :capture => true
     end

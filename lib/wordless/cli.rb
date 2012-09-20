@@ -1,9 +1,11 @@
 require 'thor'
+require 'yaml'
 require 'net/http'
 require 'rbconfig'
 require 'tempfile'
 require 'wordpress_tools/cli'
 require 'wordless/cli_helper'
+require 'active_support/all'
 
 module Wordless
   class CLI < Thor
@@ -11,6 +13,11 @@ module Wordless
     include Wordless::CLIHelper
 
     @@lib_dir = File.expand_path(File.dirname(__FILE__))
+    @@config = if File.exists?('Wordfile')
+                 YAML::load(File.open('Wordfile')).symbolize_keys
+               else
+                 {}
+               end
 
     no_tasks do
       def wordless_repo
@@ -68,6 +75,42 @@ module Wordless
         success "Compiled static assets."
       else
         error "Couldn't compile static assets."
+      end
+    end
+
+    desc "clean", "clean static assets"
+    def clean
+      unless File.directory? 'wp-content/themes'
+        error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
+        return
+      end
+
+      static_css = @@config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css']
+      static_js = @@config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js']
+
+      begin
+        (static_css + static_js).each do |file|
+          FileUtils.rm_f(file) if File.exists?(file)
+        end
+        success "Cleaned static assets."
+      rescue
+        error "Couldn't clean static assets."
+      end
+    end
+
+    desc "deploy", "deploy your wordpress using the deploy_command defined in your Wordfile"
+    def deploy
+      unless File.directory? 'wp-content/themes'
+        error "Wordpress not found. Make sure you're at the root level of a WordPress installation."
+        return
+      end
+
+      deploy_command = @@config[:deploy_command]
+
+      if deploy_command
+        system "#{deploy_command}"
+      else
+        error "deploy_command not set. Make sure it is included in your Wordfile"
       end
     end
   end
