@@ -30,8 +30,8 @@ module Wordless
     def new(name)
       WordPressTools::CLI.new.invoke('new', [name], :bare => true, :locale => options['locale'])
       Dir.chdir(name)
-      Wordless::CLI.new.invoke(:install)
-      invoke('theme', [name])
+      install
+      theme(name)
     end
 
     desc "install", "install the Wordless plugin into an existing WordPress installation"
@@ -85,8 +85,8 @@ module Wordless
         return
       end
 
-      static_css = @@config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css']
-      static_js = @@config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js']
+      static_css = Array(@@config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css'])
+      static_js = Array(@@config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
 
       begin
         (static_css + static_js).each do |file|
@@ -99,11 +99,14 @@ module Wordless
     end
 
     desc "deploy", "deploy your wordpress using the deploy_command defined in your Wordfile"
+    method_option :refresh, :aliases => "-r", :desc => "compile before deploy and clean after"
     def deploy
-      unless File.directory? 'wp-content/themes'
+      unless File.exists? 'wp-config.php'
         error "Wordpress not found. Make sure you're at the root level of a WordPress installation."
         return
       end
+
+      compile if options['refresh']
 
       deploy_command = @@config[:deploy_command]
 
@@ -112,6 +115,8 @@ module Wordless
       else
         error "deploy_command not set. Make sure it is included in your Wordfile"
       end
+
+      clean if options['refresh']
     end
   end
 end

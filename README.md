@@ -25,9 +25,28 @@ Compile your site's static assets:
 
     wordless compile
 
+Clean your compiled static assets:
+
+    wordless clean
+
+Deploy your wordless installation using the `deploy_command` specified in your Gemfile:
+
+    wordless deploy
+
 Get some help:
 
     wordless help
+
+## Configuration
+
+You can create a Wordfile to customize the behaviour of wordless:
+
+```yaml
+wordless_repo: 'git://github.com/welaika/wordless.git'
+static_css: 'wp-content/themes/mytheme/assets/stylesheets/screen.css'
+static_js: 'wp-content/themes/mytheme/assets/javascripts/application.js'
+deploy_command: 'wordmove push -du'
+```
 
 ## Caveats
 
@@ -41,7 +60,7 @@ Clone the wordless repo inside spec/fixtures/wordless:
 
 Set the compass and ruby paths inside
 
-    vim theme_builder/vanilla_theme/config/initializers/wordless_preferences.php
+    vim wordless/theme_builder/vanilla_theme/config/initializers/wordless_preferences.php
 
 Commit your changes
 

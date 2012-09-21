@@ -99,7 +99,9 @@ describe Wordless::CLI do
 
   context "#clean" do
     before do
-      Wordless::CLI.start ['new', 'myapp']
+      FileUtils.mkdir_p('myapp/wp-content/themes/myapp/assets/stylesheets')
+      FileUtils.mkdir_p('myapp/wp-content/themes/myapp/assets/javascripts')
+      Dir.chdir('myapp')
     end
 
     let(:default_css) { 'wp-content/themes/myapp/assets/stylesheets/screen.css' }
@@ -139,20 +141,28 @@ describe Wordless::CLI do
   end
 
   context "#deploy" do
-    before do
-      Wordless::CLI.start ['new', 'myapp']
-    end
 
+    let(:cli)  { Wordless::CLI.new }
     let(:file) { 'shrubbery' }
 
-    it "should deploy via the deploy command" do
+    before :each do
+      FileUtils.mkdir_p('myapp') and Dir.chdir('myapp')
+      FileUtils.touch('wp-config.php')
       Wordless::CLI.class_variable_set :@@config, {
         :deploy_command => "touch #{file}"
       }
+    end
 
-      Wordless::CLI.start ['deploy']
-
+    it "should deploy via the deploy command" do
+      cli.deploy
       File.exists?(file).should be_true
+    end
+
+    it "should compile and clean if refresh option is passed" do
+      cli.should_receive(:compile).and_return(true)
+      cli.should_receive(:clean).and_return(true)
+      cli.stub(:options).and_return({ 'refresh' => true })
+      cli.deploy
     end
   end
 end
