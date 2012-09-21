@@ -1,15 +1,5 @@
 require 'spec_helper'
 
-module Wordless
-  class CLI
-    no_tasks do
-      def wordless_repo
-        File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless'))
-      end
-    end
-  end
-end
-
 describe Wordless::CLI do
 
   before :all do
@@ -27,6 +17,9 @@ describe Wordless::CLI do
   end
 
   before :each do
+    Wordless::CLI.class_variable_set :@@config, {
+      :wordless_repo => File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless'))
+    }
     @original_wd = Dir.pwd
     Dir.chdir('tmp')
   end

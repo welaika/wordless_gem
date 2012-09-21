@@ -21,7 +21,7 @@ module Wordless
 
     no_tasks do
       def wordless_repo
-        'git://github.com/welaika/wordless.git'
+        @@config[:wordless_repo] || 'git://github.com/welaika/wordless.git'
       end
     end
 
