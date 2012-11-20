@@ -8,7 +8,7 @@ class CompileAssets extends WordlessBridge {
 
     // Determine theme name
     foreach (scandir(self::$current_dir . '/wp-content/themes') as $theme_dir) {
-      if (in_array($theme_dir, array('.', '..')) && !is_dir($theme_dir)) {
+      if (in_array($theme_dir, array('.', '..', 'index.php')) && !is_dir($theme_dir)) {
         continue;
       }
 
