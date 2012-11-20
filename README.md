@@ -29,9 +29,13 @@ Clean your compiled static assets:
 
     wordless clean
 
-Deploy your wordless installation using the `deploy_command` specified in your Gemfile:
+Deploy your wordless installation using the `deploy_command` specified in your Wordfile:
 
     wordless deploy
+
+You can also use the refresh option `-r` to compile your assets before deploying and clean your assets after:
+
+    wordless deploy -r
 
 Get some help:
 
