@@ -143,7 +143,7 @@ describe Wordless::CLI do
   context "#deploy" do
 
     let(:cli)  { Wordless::CLI.new }
-    let(:file) { 'shrubbery' }
+    let(:file) { 'shrubbery.txt' }
 
     before :each do
       FileUtils.mkdir_p('myapp') and Dir.chdir('myapp')
@@ -163,6 +163,16 @@ describe Wordless::CLI do
       cli.should_receive(:clean).and_return(true)
       cli.stub(:options).and_return({ 'refresh' => true })
       cli.deploy
+    end
+
+    context "if a custom deploy is passed" do
+      let(:file) { 'knights.txt' }
+
+      it "should launch the custom deploy command" do
+        cli.stub(:options).and_return({ 'command' => "touch #{file}" })
+        cli.deploy
+        File.exists?(file).should be_true
+      end
     end
   end
 end

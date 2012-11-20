@@ -47,8 +47,12 @@ You can create a Wordfile to customize the behaviour of wordless:
 
 ```yaml
 wordless_repo: 'git://github.com/welaika/wordless.git'
-static_css: 'wp-content/themes/mytheme/assets/stylesheets/screen.css'
-static_js: 'wp-content/themes/mytheme/assets/javascripts/application.js'
+static_css:
+  - 'wp-content/themes/mytheme/assets/stylesheets/screen.css'
+  - 'wp-content/themes/mytheme/assets/stylesheets/print.css'
+static_js:
+  - 'wp-content/themes/mytheme/assets/javascripts/application.js'
+  - 'wp-content/themes/mytheme/assets/javascripts/mobile.js'
 deploy_command: 'wordmove push -du'
 ```
 

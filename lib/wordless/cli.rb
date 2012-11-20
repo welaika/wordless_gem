@@ -99,7 +99,8 @@ module Wordless
     end
 
     desc "deploy", "deploy your wordpress using the deploy_command defined in your Wordfile"
-    method_option :refresh, :aliases => "-r", :desc => "compile before deploy and clean after"
+    method_option :refresh, :aliases => "-r", :desc => "compile static assets before deploying and clean them after"
+    method_option :command, :aliases => "-c", :desc => "use a custom deploy command"
     def deploy
       unless File.exists? 'wp-config.php'
         error "Wordpress not found. Make sure you're at the root level of a WordPress installation."
@@ -108,7 +109,7 @@ module Wordless
 
       compile if options['refresh']
 
-      deploy_command = @@config[:deploy_command]
+      deploy_command = options['command'].presence || @@config[:deploy_command]
 
       if deploy_command
         system "#{deploy_command}"
