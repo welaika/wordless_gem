@@ -25,7 +25,7 @@ module Wordless
       end
     end
 
-    desc "new [NAME]", "download WordPress in specified directory, install the Wordless plugin and create a Wordless theme"
+    desc "new [NAME]", "Download WordPress in specified directory, install the Wordless plugin and create a Wordless theme"
     method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
     def new(name)
       WordPressTools::CLI.new.invoke('new', [name], :bare => true, :locale => options['locale'])
@@ -34,7 +34,7 @@ module Wordless
       theme(name)
     end
 
-    desc "install", "install the Wordless plugin into an existing WordPress installation"
+    desc "install", "Install the Wordless plugin into an existing WordPress installation"
     def install
       unless git_installed?
         error "Git is not available. Please install git."
@@ -53,7 +53,7 @@ module Wordless
       end
     end
 
-    desc "theme NAME", "create a new Wordless theme NAME"
+    desc "theme [NAME]", "Create a new Wordless theme NAME"
     def theme(name)
       unless File.directory? 'wp-content/themes'
         error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
@@ -69,7 +69,7 @@ module Wordless
       end
     end
 
-    desc "compile", "compile static assets"
+    desc "compile", "Compile static assets"
     def compile
       if system "php #{File.join(@@lib_dir, 'compile_assets.php')}"
         success "Compiled static assets."
@@ -78,7 +78,7 @@ module Wordless
       end
     end
 
-    desc "clean", "clean static assets"
+    desc "clean", "Clean static assets"
     def clean
       unless File.directory? 'wp-content/themes'
         error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
@@ -98,12 +98,12 @@ module Wordless
       end
     end
 
-    desc "deploy", "deploy your wordpress using the deploy_command defined in your Wordfile"
-    method_option :refresh, :aliases => "-r", :desc => "compile static assets before deploying and clean them after"
-    method_option :command, :aliases => "-c", :desc => "use a custom deploy command"
+    desc "deploy", "Deploy your WordPress site using the deploy_command defined in your Wordfile"
+    method_option :refresh, :aliases => "-r", :desc => "Compile static assets before deploying and clean them afterwards"
+    method_option :command, :aliases => "-c", :desc => "Use a custom deploy command"
     def deploy
       unless File.exists? 'wp-config.php'
-        error "Wordpress not found. Make sure you're at the root level of a WordPress installation."
+        error "WordPress not found. Make sure you're at the root level of a WordPress installation."
         return
       end
 
@@ -114,7 +114,7 @@ module Wordless
       if deploy_command
         system "#{deploy_command}"
       else
-        error "deploy_command not set. Make sure it is included in your Wordfile"
+        error "deploy_command not set. Make sure it is included in your Wordfile."
       end
 
       clean if options['refresh']

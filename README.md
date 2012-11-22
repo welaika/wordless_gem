@@ -61,22 +61,23 @@ deploy_command: 'wordmove push -du'
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Only tested on Mac OS X
 
-## Tests
-Clone the wordless repo inside spec/fixtures/wordless:
+## Running specs
+
+Clone the wordless repo inside `spec/fixtures/wordless`:
 
     git clone https://github.com/welaika/wordless.git spec/fixtures/wordless && cd spec/fixtures/wordless
 
-Set the compass and ruby paths inside
+Set your compass and ruby paths:
 
     vim wordless/theme_builder/vanilla_theme/config/initializers/wordless_preferences.php
 
-Commit your changes
+Commit your changes:
 
-    git commit -am "fixed wordless paths"
+    git commit -am "Set compass and ruby paths"
 
-Go back to the wordless_gem directory and have fun with:
+Go back to the wordless_gem directory and have fun:
 
-    cd - && rspec spec
+    cd - && rspec
 
 ## Contributing
 
