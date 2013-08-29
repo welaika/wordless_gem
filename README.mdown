@@ -12,7 +12,6 @@ be in the root dir; so use it from the root dir. Easy peasy.
 
 ## Installation
 
-
     gem install wordless
 
 ## Usage
@@ -100,21 +99,7 @@ deploy_command: 'wordmove push -t'
 
 ## Running specs
 
-Clone the wordless repo inside `spec/fixtures/wordless`:
-
-    git clone https://github.com/welaika/wordless.git spec/fixtures/wordless && cd spec/fixtures/wordless
-
-Set your compass and ruby paths:
-
-    vim wordless/theme_builder/vanilla_theme/config/initializers/wordless_preferences.php
-
-Commit your changes:
-
-    git commit -am "Set compass and ruby paths"
-
-Go back to the wordless_gem directory and have fun:
-
-    cd - && rspec
+    bundle install && ./setup_tests && rspec
 
 ## Contributing
 
@@ -124,3 +109,4 @@ Go back to the wordless_gem directory and have fun:
 4. Commit your changes (`git commit -am 'Added some feature'`)
 5. Push to the branch (`git push origin my-new-feature`)
 6. Create new Pull Request
+
