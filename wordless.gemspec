@@ -14,11 +14,12 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Wordless::VERSION
 
-  gem.add_dependency "thor", "~> 0.16.0"
+  gem.add_dependency "thor"
+  gem.add_dependency "compass"
+  gem.add_dependency "activesupport"
   gem.add_dependency "wordpress_tools", '~> 0.0.2'
-  gem.add_dependency "activesupport", '~> 3.2.0'
 
-  gem.add_development_dependency 'rspec', "~> 2.11.0"
+  gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'fakeweb'
 end
 
