@@ -13,6 +13,10 @@ cp -f ../wordless_preferences.php $WORDLESS_PREFERENCES
 perl -p -i -e "s|<RUBY_PATH>|$(which ruby)|" $WORDLESS_PREFERENCES
 perl -p -i -e "s|<COMPASS_PATH>|$(which compass)|" $WORDLESS_PREFERENCES
 
+echo "== BEGIN: wordless_preferences.php =="
+cat $WORDLESS_PREFERENCES
+echo "== END: wordless_preferences.php =="
+
 git config user.name "Wordless Tester"
 git config user.email "tester@wordless.com"
 git commit -am "updated ruby and compass path"
