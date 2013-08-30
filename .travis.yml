@@ -1,4 +1,4 @@
-before_install: ./setup_tests.sh
+before_install: "sh setup_tests.sh"
 language: ruby
 rvm:
   - 2.0.0
