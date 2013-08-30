@@ -1,11 +1,17 @@
+require 'thor'
 require 'spec_helper'
 
 describe Wordless::CLI do
 
+  let(:config) do
+    { :wordless_repo => File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless')) }
+  end
+
   before do
-    Wordless::CLI.class_variable_set :@@config, {
-      :wordless_repo => File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless'))
-    }
+    Wordless::WordlessCLI.class_variable_set(:@@config, config)
+  end
+
+  before do
     @original_wd = Dir.pwd
     Dir.chdir('tmp')
   end
@@ -109,7 +115,7 @@ describe Wordless::CLI do
     end
 
     it "should remove assets specified on config" do
-      Wordless::CLI.class_variable_set :@@config, {
+      Wordless::WordlessCLI.class_variable_set :@@config, {
         :static_css => [ first_css, second_css ],
         :static_js =>  [ first_js, second_js ]
       }
@@ -130,11 +136,16 @@ describe Wordless::CLI do
 
     let(:cli)  { Wordless::CLI.new }
     let(:file) { 'shrubbery.txt' }
+    let(:wordless_cli)  { Wordless::WordlessCLI.new({}, Thor.new) }
 
-    before :each do
+    before do
       FileUtils.mkdir_p('myapp') and Dir.chdir('myapp')
       FileUtils.touch('wp-config.php')
-      Wordless::CLI.class_variable_set :@@config, {
+    end
+
+    before do
+      cli.stub(:wordless_cli).and_return(wordless_cli)
+      Wordless::WordlessCLI.class_variable_set :@@config, {
         :deploy_command => "touch #{file}"
       }
     end
@@ -145,9 +156,10 @@ describe Wordless::CLI do
     end
 
     it "should compile and clean if refresh option is passed" do
-      cli.should_receive(:compile).and_return(true)
-      cli.should_receive(:clean).and_return(true)
-      cli.stub(:options).and_return({ 'refresh' => true })
+      wordless_cli.should_receive(:compile).and_return(true)
+      wordless_cli.should_receive(:clean).and_return(true)
+      wordless_cli.stub(:options).and_return({ 'refresh' => true })
+
       cli.deploy
     end
 
@@ -155,7 +167,7 @@ describe Wordless::CLI do
       let(:file) { 'knights.txt' }
 
       it "should launch the custom deploy command" do
-        cli.stub(:options).and_return({ 'command' => "touch #{file}" })
+        wordless_cli.stub(:options).and_return({ 'command' => "touch #{file}" })
         cli.deploy
         File.exists?(file).should be_true
       end
