@@ -1,16 +1,14 @@
 require 'thor'
 require 'yaml'
 require 'net/http'
-require 'rbconfig'
 require 'tempfile'
 require 'wordpress_tools/cli'
-require 'wordless/cli_helper'
 require 'active_support/all'
 
 module Wordless
   class CLI < Thor
     include Thor::Actions
-    include Wordless::CLIHelper
+    include WordPressTools::CLIHelper
 
     @@lib_dir = File.expand_path(File.dirname(__FILE__))
     @@config = if File.exists?('Wordfile')
@@ -22,6 +20,10 @@ module Wordless
     no_tasks do
       def wordless_repo
         @@config[:wordless_repo] || 'git://github.com/welaika/wordless.git'
+      end
+
+      def add_git_repo(repo, destination)
+        run_command "git clone #{repo} #{destination}"
       end
     end
 
@@ -38,12 +40,10 @@ module Wordless
     def install
       unless git_installed?
         error "Git is not available. Please install git."
-        return
       end
 
       unless File.directory? 'wp-content/plugins'
         error "Directory 'wp-content/plugins' not found. Make sure you're at the root level of a WordPress installation."
-        return
       end
 
       if add_git_repo wordless_repo, 'wp-content/plugins/wordless'
@@ -55,17 +55,15 @@ module Wordless
 
     desc "theme [NAME]", "Create a new Wordless theme NAME"
     def theme(name)
-      unless File.directory? 'wp-content/themes'
-        error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
-        return
-      end
-
-      # Run PHP helper script
-      if system "php #{File.join(@@lib_dir, 'theme_builder.php')} #{name}"
-        success "Created a new Wordless theme in 'wp-content/themes/#{name}'."
+      if File.directory? 'wp-content/themes'
+        # Run PHP helper script
+        if system "php #{File.join(@@lib_dir, 'theme_builder.php')} #{name}"
+          success "Created a new Wordless theme in 'wp-content/themes/#{name}'."
+        else
+          error "Couldn't create Wordless theme."
+        end
       else
-        error "Couldn't create Wordless theme."
-        return
+        error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
       end
     end
 
@@ -80,21 +78,17 @@ module Wordless
 
     desc "clean", "Clean static assets"
     def clean
-      unless File.directory? 'wp-content/themes'
-        error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
-        return
-      end
+      if File.directory? 'wp-content/themes'
+        static_css = Array(@@config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css'])
+        static_js = Array(@@config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
 
-      static_css = Array(@@config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css'])
-      static_js = Array(@@config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
-
-      begin
         (static_css + static_js).each do |file|
           FileUtils.rm_f(file) if File.exists?(file)
         end
+
         success "Cleaned static assets."
-      rescue
-        error "Couldn't clean static assets."
+      else
+        error "Directory 'wp-content/themes' not found. Make sure you're at the root level of a WordPress installation."
       end
     end
 
@@ -104,7 +98,6 @@ module Wordless
     def deploy
       unless File.exists? 'wp-config.php'
         error "WordPress not found. Make sure you're at the root level of a WordPress installation."
-        return
       end
 
       compile if options['refresh']
