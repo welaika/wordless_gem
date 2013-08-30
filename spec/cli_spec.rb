@@ -2,21 +2,7 @@ require 'spec_helper'
 
 describe Wordless::CLI do
 
-  before :all do
-    wp_api_response = <<-eof
-      upgrade
-      http://wordpress.org/download/
-      http://wordpress.org/wordpress-3.3.1.zip
-      3.3.1
-      en_US
-      5.2.4
-      5.0
-    eof
-    FakeWeb.register_uri(:get, %r|http://api.wordpress.org/core/version-check/1.5/.*|, :body => wp_api_response)
-    FakeWeb.register_uri(:get, "http://wordpress.org/wordpress-3.3.1.zip", :body => File.expand_path('spec/fixtures/wordpress_stub.zip'))
-  end
-
-  before :each do
+  before do
     Wordless::CLI.class_variable_set :@@config, {
       :wordless_repo => File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless'))
     }
@@ -24,9 +10,9 @@ describe Wordless::CLI do
     Dir.chdir('tmp')
   end
 
-  after :each do
+  after do
     Dir.chdir(@original_wd)
-    %w(tmp/wordpress tmp/myapp).each do |dir|
+    Dir["tmp/*"].each do |dir|
       FileUtils.rm_rf(dir) if File.directory? dir
     end
   end
