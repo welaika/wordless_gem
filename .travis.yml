@@ -1,0 +1,5 @@
+before_install: ./setup_tests.sh
+language: ruby
+rvm:
+  - 2.0.0
+  - 1.9.3
