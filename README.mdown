@@ -97,11 +97,11 @@ deploy_command: 'wordmove push -t'
 ## Caveats
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
-- Only tested on Mac OS X
+- Not tested on Windows
 
 ## Running specs
 
-    bundle install && ./setup_tests && rspec
+    bundle install && ./setup_tests.sh && rspec
 
 ## Contributing
 
