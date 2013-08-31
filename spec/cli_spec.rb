@@ -77,14 +77,21 @@ describe Wordless::CLI do
 
   context "#compile" do
     context "with a valid Wordless installation" do
+      let(:compiled_css) { 'wp-content/themes/myapp/assets/stylesheets/screen.css' }
+      let(:compiled_js) { 'wp-content/themes/myapp/assets/javascripts/application.js' }
+
       before :each do
         Wordless::CLI.start ['new', 'myapp']
       end
 
       it "compiles static assets" do
         Wordless::CLI.start ['compile']
-        File.exists?('wp-content/themes/myapp/assets/stylesheets/screen.css').should be_true
-        File.exists?('wp-content/themes/myapp/assets/javascripts/application.js').should be_true
+
+        File.exists?(compiled_css).should be_true
+        File.exists?(compiled_js).should be_true
+
+        File.readlines(compiled_css).grep(/html{line-height:1}/).should_not be_empty
+        File.readlines(compiled_js).grep(/return "Yep, it works!";/).should_not be_empty
       end
     end
   end
