@@ -2,6 +2,8 @@
 
 A command line tool to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites.
 
+[![Build Status](https://travis-ci.org/welaika/wordless_gem.png?branch=master)](https://travis-ci.org/welaika/wordless_gem)
+
 ## Premise
 
 This is a ruby-gem, so we expect you have already installed _ruby_; if it isn't
