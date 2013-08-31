@@ -4,7 +4,7 @@ rvm:
   - 1.9.3
 install: bundle install
 before_script:
-  - sh setup_tests.sh
+  - ./setup_tests.sh
   - gem install therubyracer
   - sudo apt-get update -qq
   - sudo apt-get install -qq php5-cli
