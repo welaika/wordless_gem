@@ -6,6 +6,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Command line tool to manage Wordless themes.}
   gem.summary       = %q{Manage Wordless themes.}
   gem.homepage      = "http://github.com/welaika/wordless_gem"
+  gem.license       = "MIT"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
