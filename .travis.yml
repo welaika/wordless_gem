@@ -5,6 +5,7 @@ rvm:
   - 1.9.3
 bundler_args: --binstubs=gem_bin
 before_script:
+  - bundle config BUNDLE_BIN bin_gem
   - ./setup_tests.sh
   - gem install therubyracer
   - sudo apt-get update -qq
