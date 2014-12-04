@@ -1,6 +1,7 @@
 require 'wordless/cli'
 require 'fakeweb'
 require 'thor'
+require 'pry'
 
 module WordPressTools
   module CLIHelper
