@@ -3,7 +3,7 @@ rvm:
   - 2.1.5
   - 2.0.0
   - 1.9.3
-install: bundle install
+bundler_args: --binstubs=gem_bin
 before_script:
   - ./setup_tests.sh
   - gem install therubyracer
