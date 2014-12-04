@@ -7,10 +7,10 @@ A command line tool to help manage your [Wordless](http://welaika.github.com/wor
 ## Premise
 
 This is a ruby-gem, so we expect you have already installed _ruby_; if it isn't
-the case, probably you'll like to take a look to [RVM](http://rvm.io).
+the case, probably you'll like to take a look to [rbenv](https://github.com/sstephenson/rbenv).
 
-Wordless can't recognize if you are inside a wordpress' dirtree if you won't
-be in the root dir; so use it from the root dir. Easy peasy.
+Wordless ~~can't~~ can recognize if you are inside a wordpress' dirtree if you ~~won't
+be in the root dir~~ are in any subdirectory, starting from [commit df5e408](https://github.com/welaika/wordless_gem/commit/df5e408fcdcb54cccdf2e08c9a0c1873fbc675c4). ~~so use it from the root dir.~~ Easy peasy.
 
 ## Installation
 
@@ -101,7 +101,14 @@ deploy_command: 'wordmove push -t'
 
 ## Running specs
 
-    bundle install && ./setup_tests.sh && rspec
+```bash
+bundle install && ./setup_tests.sh && rspec
+```
+
+We've noticed problems running tests while using `rvm`; all of them solved using `rbenv`.
+We have some clues about the problem, but we are ignoring it at the moment. We have switched
+the CI tool to _sempaphore_, which use rbenv, so pull requests will be tested in a working
+environement.
 
 ## Contributing
 
