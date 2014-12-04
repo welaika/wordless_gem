@@ -1,4 +1,4 @@
 .DS_Store
 spec/fixtures/wordless
 .bundle
-rspec
+bin_gem
