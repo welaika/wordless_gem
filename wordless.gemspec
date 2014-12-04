@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "activesupport"
   gem.add_dependency "wordpress_tools", '~> 0.0.2'
 
-  gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'rspec', '< 3.0.0'
   gem.add_development_dependency 'fakeweb'
 end
 

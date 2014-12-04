@@ -68,5 +68,5 @@ PLATFORMS
 
 DEPENDENCIES
   fakeweb
-  rspec
+  rspec (< 3.0.0)
   wordless!
