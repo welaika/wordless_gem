@@ -33,7 +33,7 @@ module Wordless
       @wordpress_dir ||= (
         current_dir = File.expand_path(current_dir)
 
-        if File.exists? File.join(current_dir, wp_content_path)
+        if File.exist? File.join(current_dir, wp_content_path)
           current_dir
         elsif last_dir?(current_dir)
           raise StandardError, "Could not find a valid Wordpress directory"
@@ -53,7 +53,7 @@ module Wordless
 
     def config
       @@config ||= (
-        if File.exists?(wordfile_path)
+        if File.exist?(wordfile_path)
           YAML::load(File.open(wordfile_path)).symbolize_keys
         else
           {}
@@ -129,7 +129,7 @@ module Wordless
         static_js = Array(config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
 
         (static_css + static_js).each do |file|
-          FileUtils.rm_f(file) if File.exists?(file)
+          FileUtils.rm_f(file) if File.exist?(file)
         end
 
         success "Cleaned static assets."
