@@ -26,11 +26,11 @@ describe Wordless::CLI do
   context "#new" do
     it "downloads a copy of WordPress, installs Wordless and creates a theme" do
       Wordless::CLI.start ['new', 'myapp']
-      File.exists?('wp-content/index.php').should be_true
-      (File.exists?('wp-content/plugins/plugin.php') || File.directory?('wp-content/themes/theme')).should be_false
+      File.exist?('wp-content/index.php').should be_true
+      (File.exist?('wp-content/plugins/plugin.php') || File.directory?('wp-content/themes/theme')).should be_false
       File.directory?('wp-content/plugins/wordless').should be_true
       File.directory?('wp-content/themes/myapp').should be_true
-      File.exists?('wp-content/themes/myapp/index.php').should be_true
+      File.exist?('wp-content/themes/myapp/index.php').should be_true
     end
   end
 
@@ -72,7 +72,7 @@ describe Wordless::CLI do
     it "creates a Wordless theme" do
       Wordless::CLI.start ['theme', 'mytheme']
       File.directory?('wp-content/themes/mytheme').should be_true
-      File.exists?('wp-content/themes/mytheme/index.php').should be_true
+      File.exist?('wp-content/themes/mytheme/index.php').should be_true
     end
   end
 
@@ -88,8 +88,8 @@ describe Wordless::CLI do
       it "compiles static assets" do
         Wordless::CLI.start ['compile']
 
-        File.exists?(compiled_css).should be_true
-        File.exists?(compiled_js).should be_true
+        File.exist?(compiled_css).should be_true
+        File.exist?(compiled_js).should be_true
 
         File.readlines(compiled_css).grep(/html{line-height:1}/).should_not be_empty
         File.readlines(compiled_js).grep(/return "Yep, it works!";/).should_not be_empty
@@ -116,8 +116,8 @@ describe Wordless::CLI do
 
         Wordless::CLI.start ['clean']
 
-        File.exists?(default_css).should be_false
-        File.exists?(default_js).should be_false
+        File.exist?(default_css).should be_false
+        File.exist?(default_js).should be_false
       end
 
       it "should remove assets specified on config" do
@@ -133,7 +133,7 @@ describe Wordless::CLI do
         Wordless::CLI.start ['clean']
 
         [ first_css, second_css, first_js, second_js ].each do |file|
-          File.exists?(file).should be_false
+          File.exist?(file).should be_false
         end
       end
     end
@@ -152,7 +152,7 @@ describe Wordless::CLI do
 
       it "should deploy via the deploy command" do
         cli.deploy
-        File.exists?(file).should be_true
+        File.exist?(file).should be_true
       end
 
       it "should compile and clean if refresh option is passed" do
@@ -169,7 +169,7 @@ describe Wordless::CLI do
         it "should launch the custom deploy command" do
           wordless_cli.stub(:options).and_return({ 'command' => "touch #{file}" })
           cli.deploy
-          File.exists?(file).should be_true
+          File.exist?(file).should be_true
         end
       end
     end
