@@ -1,1 +1,12 @@
+require "thor"
+require "yaml"
+require "net/http"
+require "tempfile"
+require "active_support/all"
+require "open-uri"
+require "wordpress_tools"
+
+require "wordless/cli"
+require "wordless/cli_helper"
 require "wordless/version"
+require "wordless/wordless_cli"

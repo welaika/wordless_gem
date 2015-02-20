@@ -1,4 +1,4 @@
-require 'wordless/wordless_cli'
+require 'spec_helper'
 
 describe Wordless::WordlessCLI do
   let(:cli) { Wordless::WordlessCLI.new }

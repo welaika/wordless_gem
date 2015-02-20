@@ -1,8 +1,6 @@
-require 'wordpress_tools/cli'
-
 module Wordless
   class WordlessCLI
-    include WordPressTools::CLIHelper
+    include CLIHelper
     attr_reader :options, :thor
 
     module PATH
@@ -73,7 +71,7 @@ module Wordless
     end
 
     def start(name)
-      WordPressTools::CLI.new.invoke('new', [name], :bare => true, :locale => options['locale'])
+      WordPressTools::CLI.new.invoke('new', [name], options.merge(wordpress_tools_options) )
       Dir.chdir(name)
       install
       theme(name)
@@ -174,6 +172,10 @@ module Wordless
 
     def add_git_repo(repo, destination)
       run_command "git clone #{repo} #{destination}"
+    end
+
+    def wordpress_tools_options
+      { bare: true }
     end
 
   end

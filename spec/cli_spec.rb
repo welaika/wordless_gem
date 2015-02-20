@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Wordless::CLI do
 
   let(:config) do
-    { :wordless_repo => File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless')) }
+    { wordless_repo: File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'wordless')) }
   end
 
   before do
@@ -20,17 +20,6 @@ describe Wordless::CLI do
     Dir.chdir(@original_wd)
     Dir["tmp/*"].each do |dir|
       FileUtils.rm_rf(dir) if File.directory? dir
-    end
-  end
-
-  context "#new" do
-    it "downloads a copy of WordPress, installs Wordless and creates a theme" do
-      Wordless::CLI.start ['new', 'myapp']
-      File.exist?('wp-content/index.php').should be_true
-      (File.exist?('wp-content/plugins/plugin.php') || File.directory?('wp-content/themes/theme')).should be_false
-      File.directory?('wp-content/plugins/wordless').should be_true
-      File.directory?('wp-content/themes/myapp').should be_true
-      File.exist?('wp-content/themes/myapp/index.php').should be_true
     end
   end
 
@@ -52,33 +41,37 @@ describe Wordless::CLI do
 
   context "#install" do
     before do
-      WordPressTools::CLI.start ['new']
-      Dir.chdir 'wordpress'
+      FileUtils.mkdir_p('wordpress/wp-content/plugins') && Dir.chdir('wordpress')
     end
 
     it "installs the Wordless plugin" do
       Wordless::CLI.start ['install']
-      File.directory?('wp-content/plugins/wordless').should be_true
+      File.directory?('wp-content/plugins/wordless').should be_truthy
     end
   end
 
   context "#theme" do
     before do
-      WordPressTools::CLI.start ['new']
-      Dir.chdir 'wordpress'
+      FileUtils.mkdir_p('wordpress/wp-content/plugins')
+      FileUtils.mkdir_p('wordpress/wp-content/themes')
+      Dir.chdir('wordpress')
       Wordless::CLI.start ['install']
     end
 
     it "creates a Wordless theme" do
       Wordless::CLI.start ['theme', 'mytheme']
-      File.directory?('wp-content/themes/mytheme').should be_true
-      File.exist?('wp-content/themes/mytheme/index.php').should be_true
+      File.directory?('wp-content/themes/mytheme').should be_truthy
+      File.exist?('wp-content/themes/mytheme/index.php').should be_truthy
     end
   end
 
   context "with a working Wordless install" do
     before do
-      Wordless::CLI.start ['new', 'myapp']
+      FileUtils.mkdir_p('wordpress/wp-content/plugins')
+      FileUtils.mkdir_p('wordpress/wp-content/themes')
+      Dir.chdir('wordpress')
+      Wordless::CLI.start ['install']
+      Wordless::CLI.start ['theme', 'myapp']
     end
 
     context "#compile" do
@@ -88,8 +81,8 @@ describe Wordless::CLI do
       it "compiles static assets" do
         Wordless::CLI.start ['compile']
 
-        File.exist?(compiled_css).should be_true
-        File.exist?(compiled_js).should be_true
+        File.exist?(compiled_css).should be_truthy
+        File.exist?(compiled_js).should be_truthy
 
         File.readlines(compiled_css).grep(/html{line-height:1}/).should_not be_empty
         File.readlines(compiled_js).grep(/return "Yep, it works!";/).should_not be_empty
@@ -116,14 +109,14 @@ describe Wordless::CLI do
 
         Wordless::CLI.start ['clean']
 
-        File.exist?(default_css).should be_false
-        File.exist?(default_js).should be_false
+        File.exist?(default_css).should be_falsey
+        File.exist?(default_js).should be_falsey
       end
 
       it "should remove assets specified on config" do
         Wordless::WordlessCLI.class_variable_set :@@config, {
-          :static_css => [ first_css, second_css ],
-          :static_js =>  [ first_js, second_js ]
+          static_css: [ first_css, second_css ],
+          static_js:  [ first_js, second_js ]
         }
 
         [ first_css, second_css, first_js, second_js ].each do |file|
@@ -133,7 +126,7 @@ describe Wordless::CLI do
         Wordless::CLI.start ['clean']
 
         [ first_css, second_css, first_js, second_js ].each do |file|
-          File.exist?(file).should be_false
+          File.exist?(file).should be_falsey
         end
       end
     end
@@ -146,13 +139,13 @@ describe Wordless::CLI do
       before do
         cli.stub(:wordless_cli).and_return(wordless_cli)
         Wordless::WordlessCLI.class_variable_set :@@config, {
-          :deploy_command => "touch #{file}"
+          deploy_command: "touch #{file}"
         }
       end
 
       it "should deploy via the deploy command" do
         cli.deploy
-        File.exist?(file).should be_true
+        File.exist?(file).should be_truthy
       end
 
       it "should compile and clean if refresh option is passed" do
@@ -169,7 +162,7 @@ describe Wordless::CLI do
         it "should launch the custom deploy command" do
           wordless_cli.stub(:options).and_return({ 'command' => "touch #{file}" })
           cli.deploy
-          File.exist?(file).should be_true
+          File.exist?(file).should be_truthy
         end
       end
     end

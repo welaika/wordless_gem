@@ -1,4 +1,11 @@
-.DS_Store
-spec/fixtures/wordless
-.bundle
-bin_gem
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/spec/fixtures/wordless
+/tmp/*
+!.keep

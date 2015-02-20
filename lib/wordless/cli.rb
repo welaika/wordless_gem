@@ -1,13 +1,7 @@
-require 'thor'
-require 'yaml'
-require 'net/http'
-require 'tempfile'
-require 'active_support/all'
-require 'wordless/wordless_cli'
-
 module Wordless
   class CLI < Thor
     include Thor::Actions
+    include WordPressTools::SharedOptions
 
     no_tasks do
       def wordless_cli
@@ -16,7 +10,7 @@ module Wordless
     end
 
     desc "new [NAME]", "Download WordPress in specified directory, install the Wordless plugin and create a Wordless theme"
-    method_option :locale, :aliases => "-l", :desc => "WordPress locale (default is en_US)"
+    add_method_options(shared_options)
     def new(name)
       wordless_cli.start(name)
     end
