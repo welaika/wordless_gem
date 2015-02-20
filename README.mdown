@@ -35,9 +35,29 @@ Create a new Wordless-enabled WordPress site in directory `mysite`. This downloa
 
     wordless new mysite
 
-or
+```bash
+Options:
+      [--force]                          # Overwrite existing WP-CLI / WP-CLI Server installation
+  -l, [--locale=LOCALE]                  # WordPress locale
+                                         # Default: en_US
+  -b, [--bare=BARE]                      # Remove default themes and plugins
+                                         # Default: true
+      [--admin-user=ADMIN_USER]          # WordPress admin user
+                                         # Default: admin
+      [--admin-email=ADMIN_EMAIL]        # WordPress admin email
+                                         # Default: admin@example.com
+      [--admin-password=ADMIN_PASSWORD]  # WordPress admin password
+                                         # Default: password
+      [--db-user=DB_USER]                # MySQL database user
+                                         # Default: root
+      [--db-password=DB_PASSWORD]        # MySQL database pasword
+      [--site-url=SITE_URL]              # Wordpress site URL
+                                         # Default: http://localhost:8080
+```
 
-    wordless new mysite --locale=fr_FR
+##### caveats
+
+- Default db-password is no password
 
 #### install
 

@@ -34,9 +34,7 @@ module Wordless
     end
 
     def git_installed?
-      # http://stackoverflow.com/questions/4597490/platform-independent-way-of-detecting-if-git-is-installed
-      void = RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
-      system "git --version >>#{void} 2>&1"
+      run_command("git --version")
     end
 
     private
@@ -45,8 +43,12 @@ module Wordless
       say message, color
     end
 
+    def void
+      RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
+    end
+
     def run_command(command)
-      run command, verbose: false, capture: true
+      system("#{command} >>#{void} 2>&1")
     end
 
   end

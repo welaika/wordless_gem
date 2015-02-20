@@ -71,10 +71,17 @@ module Wordless
     end
 
     def start(name)
-      WordPressTools::CLI.new.invoke('new', [name], options.merge(wordpress_tools_options) )
+      WordPressTools::CLI.new.invoke('new', [name], options)
       Dir.chdir(name)
       install
-      theme(name)
+      create_theme(name)
+      if wp_cli_installed?
+        activate_plugin
+        activate_theme(name)
+        set_permalinks
+      else
+        warning("WP-CLI is not installed. Cannot activate wordless plugin and theme")
+      end
     end
 
     def install
@@ -95,7 +102,25 @@ module Wordless
       end
     end
 
-    def theme(name)
+    def activate_plugin
+      info("Activating wordless plugin...")
+      run_command("wp plugin activate wordless") || error("Cannot activate wordless plugin")
+      success("Done!")
+    end
+
+    def activate_theme(name)
+      info("Activating theme...")
+      run_command("wp theme activate #{name}") || error("Cannot activate theme '#{name}'")
+      success("Done!")
+    end
+
+    def set_permalinks
+      info("Setting permalinks for wordless...")
+      run_command("wp rewrite structure /%postname%/") || error("Cannot set permalinks")
+      success("Done!")
+    end
+
+    def create_theme(name)
       at_wordpress_root!
 
       if File.directory?(themes_path)
@@ -171,11 +196,11 @@ module Wordless
     end
 
     def add_git_repo(repo, destination)
-      run_command "git clone #{repo} #{destination}"
+      run_command("git clone #{repo} #{destination}")
     end
 
-    def wordpress_tools_options
-      { bare: true }
+    def wp_cli_installed?
+      run_command("which wp")
     end
 
   end
