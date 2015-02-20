@@ -11,7 +11,7 @@ module Wordless
 
     desc "new [NAME]", "Download WordPress in specified directory, install the Wordless plugin and create a Wordless theme"
     add_method_options(shared_options)
-    method_option :bare, aliases: "-b", desc: "Remove default themes and plugins", default: true
+    method_option :bare, type: :boolean, aliases: "-b", desc: "Remove default themes and plugins", default: true
     def new(name)
       wordless_cli.start(name)
     end
