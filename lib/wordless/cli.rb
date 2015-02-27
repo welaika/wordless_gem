@@ -37,8 +37,8 @@ module Wordless
     end
 
     desc "deploy", "Deploy your WordPress site using the deploy_command defined in your Wordfile"
-    method_option :refresh, :aliases => "-r", :desc => "Compile static assets before deploying and clean them afterwards"
-    method_option :command, :aliases => "-c", :desc => "Use a custom deploy command"
+    method_option :refresh, aliases: "-r", desc: "Compile static assets before deploying and clean them afterwards"
+    method_option :command, aliases: "-c", desc: "Use a custom deploy command"
     def deploy
       wordless_cli.deploy
     end
