@@ -114,6 +114,8 @@ static_js:
 deploy_command: 'wordmove push -t'
 ```
 
+**Note**: remember to add `screen.css` and/or `application.js` if you want to define `static_css` or `static_js`
+
 ## Caveats
 
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.

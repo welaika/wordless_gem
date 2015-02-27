@@ -1,5 +1,21 @@
 module Wordless
   module CLIHelper
+    extend ActiveSupport::Concern
+
+    included do
+      [ :say, :run ].each do |sym|
+        define_method sym do |*args|
+          thor.send(sym, *args)
+        end
+        private sym
+      end
+    end
+
+    private
+
+    def thor
+      raise NotImplementedError, "Including class must provide a thor instance object"
+    end
 
     def info(message)
       log_message message
@@ -18,26 +34,17 @@ module Wordless
       log_message message, :yellow
     end
 
-    def download(url, destination)
-      begin
-        f = open(destination, "wb")
-        f.write(open(url).read) ? true : false
-      rescue
-        false
-      ensure
-        f.close
-      end
+    def ensure_wp_cli_installed!
+      error("Cannot continue: WP-CLI is not installed.") unless wp_cli_installed?
     end
 
-    def unzip(file, destination)
-      run_command "unzip #{file} -d #{destination}"
+    def run_command(command)
+      system("#{command} >>#{void} 2>&1")
     end
 
-    def git_installed?
-      run_command("git --version")
+    def wp_cli_installed?
+      run_command("which wp")
     end
-
-    private
 
     def log_message(message, color = nil)
       say message, color
@@ -46,10 +53,5 @@ module Wordless
     def void
       RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
     end
-
-    def run_command(command)
-      system("#{command} >>#{void} 2>&1")
-    end
-
   end
 end

@@ -5,7 +5,7 @@ module Wordless
 
     no_tasks do
       def wordless_cli
-        Wordless::WordlessCLI.new(options, self)
+        Wordless::WordlessCLI.new(self, options)
       end
     end
 
@@ -18,7 +18,7 @@ module Wordless
 
     desc "install", "Install the Wordless plugin into an existing WordPress installation"
     def install
-      wordless_cli.install
+      wordless_cli.install_wordless
     end
 
     desc "theme [NAME]", "Create a new Wordless theme NAME"

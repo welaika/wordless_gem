@@ -1,6 +1,7 @@
 module Wordless
   class WordlessCLI
     include CLIHelper
+
     attr_reader :options, :thor
 
     module PATH
@@ -17,6 +18,95 @@ module Wordless
       PATH::THEMES     => 'wp-content/themes',
     }
 
+    def initialize(thor, options = {})
+      @options = options
+      @thor = thor
+    end
+
+    def start(name)
+      install_wordpress_and_wp_cli(name)
+      ensure_wp_cli_installed!
+
+      install_wordless
+      create_theme(name)
+      activate_theme(name)
+      set_permalinks
+    end
+
+    def install_wordless
+      ensure_wp_cli_installed!
+
+      info("Installing and activating plugin...")
+
+      at_wordpress_root do
+        error("Directory '#{plugins_path}' not found.") unless File.directory?(plugins_path)
+        if run_command("wp plugin install wordless --activate")
+          success("Done!")
+        else
+          error("There was an error installing and/or activating the Wordless plugin.")
+        end
+      end
+    end
+
+    def create_theme(name)
+      at_wordpress_root do
+        if File.directory?(themes_path)
+          if run_command("php #{File.join(lib_dir, 'theme_builder.php')} #{name}")
+            success("Created a new Wordless theme in '#{File.join(themes_path, name)}'.")
+          else
+            error("Couldn't create Wordless theme.")
+          end
+        else
+          error("Directory '#{themes_path}' not found.")
+        end
+      end
+    end
+
+    def compile
+      at_wordpress_root do
+        if system "php #{File.join(lib_dir, 'compile_assets.php')}"
+          success("Compiled static assets.")
+        else
+          error("Couldn't compile static assets.")
+        end
+      end
+    end
+
+    def clean
+      at_wordpress_root do
+        if File.directory?(themes_path)
+          static_css = Array(config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css'])
+          static_js = Array(config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
+
+          (static_css + static_js).each do |file|
+            FileUtils.rm_f(file) if File.exist?(file)
+          end
+
+          success("Cleaned static assets.")
+        else
+          error("Directory '#{themes_path}' not found.")
+        end
+      end
+    end
+
+    def deploy
+      at_wordpress_root do
+        compile if options['refresh']
+
+        deploy_command = options['command'].presence || config[:deploy_command]
+
+        if deploy_command
+          system("#{deploy_command}")
+        else
+          error("deploy_command not set. Make sure it is included in your Wordfile.")
+        end
+
+        clean if options['refresh']
+      end
+    end
+
+    private
+
     DEFAULT_PATHS.each do |type, value|
       define_method "#{type}_path" do
         value
@@ -27,14 +117,14 @@ module Wordless
       @@lib_dir ||= File.expand_path(File.dirname(__FILE__))
     end
 
-    def wordpress_dir(current_dir = start_dir)
+    def wordpress_dir(current_dir = Dir.pwd)
       @wordpress_dir ||= (
         current_dir = File.expand_path(current_dir)
 
-        if File.exist? File.join(current_dir, wp_content_path)
+        if File.exist?(File.join(current_dir, wp_content_path))
           current_dir
         elsif last_dir?(current_dir)
-          raise StandardError, "Could not find a valid Wordpress directory"
+          error("Could not find a valid Wordpress directory")
         else
           wordpress_dir(upper_dir(current_dir))
         end
@@ -59,150 +149,34 @@ module Wordless
       )
     end
 
-    [ :say, :run ].each do |sym|
-      define_method sym do |*args|
-        thor.send(sym, *args)
+    def at_wordpress_root
+      pwd = Dir.pwd
+      Dir.chdir(wordpress_dir)
+      begin
+        yield
+      ensure
+        Dir.chdir(pwd)
       end
     end
 
-    def initialize(options = {}, thor = nil)
-      @options = options
-      @thor = thor
-    end
-
-    def start(name)
+    def install_wordpress_and_wp_cli(name)
       WordPressTools::CLI.new.invoke('new', [name], options)
-      Dir.chdir(name)
-      install
-      create_theme(name)
-      if wp_cli_installed?
-        activate_plugin
-        activate_theme(name)
-        set_permalinks
-      else
-        warning("WP-CLI is not installed. Cannot activate wordless plugin and theme")
-      end
-    end
-
-    def install
-      at_wordpress_root!
-
-      unless git_installed?
-        error "Git is not available. Please install git."
-      end
-
-      if File.directory?(plugins_path)
-        if run_command "git clone #{wordless_repo} #{wordless_plugin_path}"
-          success "Installed Wordless plugin."
-        else
-          error "There was an error installing the Wordless plugin."
-        end
-      else
-        error "Directory '#{plugins_path}' not found."
-      end
-    end
-
-    def activate_plugin
-      info("Activating wordless plugin...")
-      run_command("wp plugin activate wordless") || error("Cannot activate wordless plugin")
-      success("Done!")
     end
 
     def activate_theme(name)
-      info("Activating theme...")
-      run_command("wp theme activate #{name}") || error("Cannot activate theme '#{name}'")
-      success("Done!")
+      at_wordpress_root do
+        info("Activating theme...")
+        run_command("wp theme activate #{name}") || error("Cannot activate theme '#{name}'")
+        success("Done!")
+      end
     end
 
     def set_permalinks
-      info("Setting permalinks for wordless...")
-      run_command("wp rewrite structure /%postname%/") || error("Cannot set permalinks")
-      success("Done!")
-    end
-
-    def create_theme(name)
-      at_wordpress_root!
-
-      if File.directory?(themes_path)
-        if system "php #{File.join(lib_dir, 'theme_builder.php')} #{name}"
-          success "Created a new Wordless theme in '#{File.join(themes_path, name)}'."
-        else
-          error "Couldn't create Wordless theme."
-        end
-      else
-        error "Directory '#{themes_path}' not found."
+      at_wordpress_root do
+        info("Setting permalinks for wordless...")
+        run_command("wp rewrite structure /%postname%/") || error("Cannot set permalinks")
+        success("Done!")
       end
     end
-
-    def compile
-      at_wordpress_root!
-
-      if system "php #{File.join(lib_dir, 'compile_assets.php')}"
-        success "Compiled static assets."
-      else
-        error "Couldn't compile static assets."
-      end
-    end
-
-    def clean
-      at_wordpress_root!
-
-      if File.directory?(themes_path)
-        static_css = Array(config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css'])
-        static_js = Array(config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
-
-        (static_css + static_js).each do |file|
-          FileUtils.rm_f(file) if File.exist?(file)
-        end
-
-        success "Cleaned static assets."
-      else
-        error "Directory '#{themes_path}' not found."
-      end
-    end
-
-    def deploy
-      at_wordpress_root!
-
-      compile if options['refresh']
-
-      deploy_command = options['command'].presence || config[:deploy_command]
-
-      if deploy_command
-        system "#{deploy_command}"
-      else
-        error "deploy_command not set. Make sure it is included in your Wordfile."
-      end
-
-      clean if options['refresh']
-    end
-
-    private
-
-    def start_dir
-      "."
-    end
-
-    def at_wordpress_root!
-      Dir.chdir(wordpress_dir)
-    end
-
-    def wordless_plugin_path
-      File.join(plugins_path, "wordless")
-    end
-
-    def wordless_repo
-      config[:wordless_repo] || 'git://github.com/welaika/wordless.git'
-    end
-
-    def add_git_repo(repo, destination)
-      run_command("git clone #{repo} #{destination}")
-    end
-
-    def wp_cli_installed?
-      run_command("which wp")
-    end
-
   end
 end
-

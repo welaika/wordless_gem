@@ -28,8 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "yui-compressor"
   spec.add_dependency "wordpress_tools", "~> 1.1.1"
 
-  spec.add_development_dependency "rspec", "< 3.0.0"
-  spec.add_development_dependency "fakeweb", "~> 1.3"
+  spec.add_development_dependency "rspec", "~> 3.2.0"
   spec.add_development_dependency "pry-byebug", "~> 3.0"
   spec.add_development_dependency "priscilla", "~> 1.0"
 end
