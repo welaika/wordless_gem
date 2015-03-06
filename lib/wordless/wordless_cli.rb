@@ -25,7 +25,8 @@ module Wordless
 
     def start(name)
       install_wordpress_and_wp_cli(name)
-      ensure_wp_cli_installed!
+
+      Dir.chdir(name)
 
       install_wordless
       create_theme(name)
