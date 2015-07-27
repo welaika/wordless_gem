@@ -1,4 +1,4 @@
-# Wordless
+![Wordless logo](https://raw.githubusercontent.com/welaika/wordless_gem/master/assets/images/wordless_gem.png)
 
 A command line tool to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites.
 
@@ -131,6 +131,9 @@ We've noticed problems running tests while using `rvm`; all of them solved using
 We have some clues about the problem, but we are ignoring it at the moment. We have switched
 the CI tool to _sempaphore_, which use rbenv, so pull requests will be tested in a working
 environement.
+
+## Need more tools?
+Visit [Wordpress Tools](http://wptools.it).
 
 ## Contributing
 
