@@ -9,3 +9,4 @@
 /spec/fixtures/wordless
 /tmp/*
 !.keep
+*.gem
