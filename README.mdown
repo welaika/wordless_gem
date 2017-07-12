@@ -2,7 +2,7 @@
 
 A command line tool to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites.
 
-[![Build Status](https://semaphoreapp.com/api/v1/projects/1b1be0c0-b8aa-4778-a644-675ca3f7b9e4/303149/shields_badge.svg)](https://semaphoreapp.com/welaika/wordless_gem)
+[![Build Status](https://semaphoreci.com/api/v1/welaika/wordless_gem/branches/master/badge.svg)](https://semaphoreci.com/welaika/wordless_gem)
 
 ## Premise
 
