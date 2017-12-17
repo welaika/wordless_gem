@@ -3,7 +3,7 @@ module Wordless
     extend ActiveSupport::Concern
 
     included do
-      [ :say, :run ].each do |sym|
+      %i[say run].each do |sym|
         define_method sym do |*args|
           thor.send(sym, *args)
         end
@@ -51,7 +51,7 @@ module Wordless
     end
 
     def void
-      RbConfig::CONFIG['host_os'] =~ /msdos|mswin|djgpp|mingw/ ? 'NUL' : '/dev/null'
+      /msdos|mswin|djgpp|mingw/.match? RbConfig::CONFIG['host_os'] ? 'NUL' : '/dev/null'
     end
   end
 end

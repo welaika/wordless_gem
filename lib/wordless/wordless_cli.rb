@@ -15,8 +15,8 @@ module Wordless
       PATH::WORDFILE   => 'Wordfile',
       PATH::WP_CONTENT => 'wp-content',
       PATH::PLUGINS    => 'wp-content/plugins',
-      PATH::THEMES     => 'wp-content/themes',
-    }
+      PATH::THEMES     => 'wp-content/themes'
+    }.freeze
 
     def initialize(thor, options = {})
       @options = options
@@ -49,63 +49,6 @@ module Wordless
       end
     end
 
-    def create_theme(name)
-      at_wordpress_root do
-        if File.directory?(themes_path)
-          if run_command("php #{File.join(lib_dir, 'theme_builder.php')} #{name}")
-            success("Created a new Wordless theme in '#{File.join(themes_path, name)}'.")
-          else
-            error("Couldn't create Wordless theme.")
-          end
-        else
-          error("Directory '#{themes_path}' not found.")
-        end
-      end
-    end
-
-    def compile
-      at_wordpress_root do
-        if system "php #{File.join(lib_dir, 'compile_assets.php')}"
-          success("Compiled static assets.")
-        else
-          error("Couldn't compile static assets.")
-        end
-      end
-    end
-
-    def clean
-      at_wordpress_root do
-        if File.directory?(themes_path)
-          static_css = Array(config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css'])
-          static_js = Array(config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
-
-          (static_css + static_js).each do |file|
-            FileUtils.rm_f(file) if File.exist?(file)
-          end
-
-          success("Cleaned static assets.")
-        else
-          error("Directory '#{themes_path}' not found.")
-        end
-      end
-    end
-
-    def deploy
-      at_wordpress_root do
-        compile if options['refresh']
-
-        deploy_command = options['command'].presence || config[:deploy_command]
-
-        if deploy_command
-          system("#{deploy_command}")
-        else
-          error("deploy_command not set. Make sure it is included in your Wordfile.")
-        end
-
-        clean if options['refresh']
-      end
-    end
-
     private
 
     DEFAULT_PATHS.each do |type, value|
@@ -115,11 +58,11 @@ module Wordless
     end
 
     def lib_dir
-      @@lib_dir ||= File.expand_path(File.dirname(__FILE__))
+      @lib_dir ||= __dir__
     end
 
     def wordpress_dir(current_dir = Dir.pwd)
-      @wordpress_dir ||= (
+      @wordpress_dir ||= begin
         current_dir = File.expand_path(current_dir)
 
         if File.exist?(File.join(current_dir, wp_content_path))
@@ -129,7 +72,7 @@ module Wordless
         else
           wordpress_dir(upper_dir(current_dir))
         end
-      )
+      end
     end
 
     def last_dir?(directory)
@@ -141,13 +84,13 @@ module Wordless
     end
 
     def config
-      @@config ||= (
+      @config ||= begin
         if File.exist?(wordfile_path)
-          YAML::load(File.open(wordfile_path)).symbolize_keys
+          YAML.safe_load(File.open(wordfile_path)).symbolize_keys
         else
           {}
         end
-      )
+      end
     end
 
     def at_wordpress_root
@@ -175,7 +118,7 @@ module Wordless
     def set_permalinks
       at_wordpress_root do
         info("Setting permalinks for wordless...")
-        run_command("wp rewrite structure /%postname%/") || error("Cannot set permalinks")
+        run_command('wp rewrite structure /%postname%/') || error("Cannot set permalinks")
         success("Done!")
       end
     end

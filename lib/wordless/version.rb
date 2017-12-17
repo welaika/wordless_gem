@@ -1,3 +1,3 @@
 module Wordless
-  VERSION = "1.1.6"
+  VERSION = "1.1.6".freeze
 end
