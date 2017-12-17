@@ -29,8 +29,7 @@ module Wordless
       Dir.chdir(name)
 
       install_wordless
-      create_theme(name)
-      activate_theme(name)
+      create_and_activate_theme(name)
       set_permalinks
     end
 
@@ -107,10 +106,10 @@ module Wordless
       WordPressTools::CLI.new.invoke('new', [name], options)
     end
 
-    def activate_theme(name)
+    def create_and_activate_theme(name)
       at_wordpress_root do
         info("Activating theme...")
-        run_command("wp theme activate #{name}") || error("Cannot activate theme '#{name}'")
+        run_command("wp wordless theme create #{name}") || error("Cannot activate theme '#{name}'")
         success("Done!")
       end
     end
