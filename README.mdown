@@ -1,12 +1,12 @@
 ![Wordless logo](https://raw.githubusercontent.com/welaika/wordless_gem/master/assets/images/wordless_gem.png)
 
-The quickest CLI tool to setup a new WordPress locally. Wordless [Wordless](http://welaika.github.com/wordless/) ready.
+The quickest CLI tool to setup a new WordPress locally. [Wordless](http://welaika.github.com/wordless/) ready.
 
 [![Build Status](https://semaphoreci.com/api/v1/welaika/wordless_gem/branches/master/badge.svg)](https://semaphoreci.com/welaika/wordless_gem)
 
 ## Premise
 
-This is a ruby-gem, so we expect you have already installed _ruby_; if it isn't
+This is a ruby-gem, so we expect you have already installed _ruby_, since it is there by default on Mac and Linux; if it isn't
 the case, probably you'll like to take a look to [rbenv](https://github.com/sstephenson/rbenv).
 
 ## Installation
@@ -47,9 +47,9 @@ Options:
                                          # Default: http://localhost:8080
 ```
 
-A really short video to understand how much time a new development WordPress site should require to be up and runnig.
+A super **short video to understand** how much time a new development WordPress site should require to be up and runnig.
 
-<video src="https://d3vv6lp55qjaqc.cloudfront.net/items/3I0v060l2l0G0X443X1d/Screen%20Recording%202017-12-17%20at%2003.49%20PM.mov" controls style="display: block;height: auto;width: 100%;">Screen Recording 2017-12-17 at 03.49 PM.mov</video>
+https://cl.ly/2y3V0L1i3N3X
 
 ##### caveats
 
