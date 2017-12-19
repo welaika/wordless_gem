@@ -19,15 +19,19 @@ the case, probably you'll like to take a look to [rbenv](https://github.com/sste
 
     Tasks:
       wordless help [TASK]   # Describe available tasks or one specific task
-      wordless new [NAME]    # Download WordPress in specified directory, install the Wordless plugin and create a Wordless theme
+      wordless new <NAME>    # Download WordPress in specified directory, install the Wordless plugin and create a Wordless theme
 
 #### new
 
-Create a new Wordless-enabled WordPress site in directory `mysite`. This downloads the latest stable release of WordPress (you can also specify a locale):
+Create a new Wordless-enabled WordPress site in directory `NAME`. This downloads the latest stable release of WordPress (you can also specify a locale):
 
     wordless new mysite
 
 ```bash
+> wordless help new
+Usage:
+  wordless new <NAME>
+
 Options:
       [--force]                          # Overwrite existing WP-CLI / WP-CLI Server installation
   -l, [--locale=LOCALE]                  # WordPress locale
@@ -47,19 +51,37 @@ Options:
                                          # Default: http://localhost:8080
 ```
 
+This command will:
+
+* Check if nodejs and necessary global modules are installed
+* Setup a new database
+* Install WP-CLI (prompt if already installed)
+* Download WordPress
+* Configure WordPress
+* Bootstrap and prepare a new wordless theme
+* Make you a happier developer
+
 A super **short video to understand** how much time a new development WordPress site should require to be up and runnig.
 
 https://cl.ly/2y3V0L1i3N3X
 
-##### caveats
+## Notes
 
-- Default db-password is no password
+- Be sure to have MySQL running before start the installation process: we have to create a database
+- Default db-password is no password. Use the `--db-password=` option if you have one
 - If a DB with the same name is already present, we will give up. Sorry.
-
-## Caveats
-
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Not tested on Windows
+
+## Wordless < 2 ?
+
+If you are still working with an old Wordless theme and you need the ruby-releated features
+of the `wordless` gem, you need to install the last version 1.x version released
+
+```
+gem uninstall wordless
+gem install wordless -v '1.1.6'
+```
 
 ## Running specs
 
