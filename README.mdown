@@ -1,6 +1,6 @@
 ![Wordless logo](https://raw.githubusercontent.com/welaika/wordless_gem/master/assets/images/wordless_gem.png)
 
-The quickest CLI tool to setup a new WordPress locally. [Wordless](http://welaika.github.com/wordless/) ready.
+The quickest CLI tool to setup a new WordPress locally. [Wordless](https://github.com/welaika/wordless) ready.
 
 [![Build Status](https://semaphoreci.com/api/v1/welaika/wordless_gem/branches/master/badge.svg)](https://semaphoreci.com/welaika/wordless_gem)
 
