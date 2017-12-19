@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "compass"
   spec.add_dependency "sprockets"
   spec.add_dependency "thor", "~> 0.19.1"
-  spec.add_dependency "wordpress_tools", "~> 1.3.0"
+  spec.add_dependency "wordpress_tools", "~> 1.4.0"
   spec.add_dependency "yui-compressor"
 
   spec.add_development_dependency "gem-release"
