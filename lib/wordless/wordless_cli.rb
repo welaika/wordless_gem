@@ -34,8 +34,15 @@ module Wordless
       install_wordless
       create_and_activate_theme(name)
       set_permalinks
-      success("All done! Now yor're ready to use Wordless")
-      success("Run `cd wp-content/themes/#{name} && yarn && yarn run server` and enjoy :)")
+
+      Dir.chdir("wp-content/themes/#{name}")
+
+      info("Installing theme's node modules...")
+      run_command("yarn install") || error("Problem installing theme's node modules")
+
+      success("All done! Now yor're ready to use Wordless with following commands:")
+      info("`cd #{name}/wp-content/themes/#{name}`")
+      info("`yarn run server`")
     end
 
     def install_wordless
