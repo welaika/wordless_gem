@@ -18,6 +18,8 @@ module Wordless
       PATH::THEMES     => 'wp-content/themes'
     }.freeze
 
+    GLOBAL_NODE_MODULES = %w[foreman yarn].freeze
+
     def initialize(thor, options = {})
       @options = options
       @thor = thor
@@ -49,6 +51,28 @@ module Wordless
           error("There was an error installing and/or activating the Wordless plugin.")
         end
       end
+    end
+
+    def install_global_node_modules
+      info("Check for necessary global NPM packages")
+      run_command('which npm') ||
+        error("Node isn't installed. Head to https://nodejs.org/en/download/package-manager")
+
+      global_node_modules = GLOBAL_NODE_MODULES.dup
+
+      global_node_modules.reject! do |m|
+        run_command("npm list -g #{m}")
+      end
+
+      if global_node_modules.empty?
+        success("Global NPM packages needed by Wordless already installed. Good job!")
+        return true
+      end
+
+      global_node_modules.each do |m|
+        run_command("npm install -g #{m}") && success("Installed NPM package #{m} globally")
+      end
+      success("Done!")
     end
 
     private
@@ -123,28 +147,6 @@ module Wordless
         run_command('wp rewrite structure /%postname%/') || error("Cannot set permalinks")
         success("Done!")
       end
-    end
-
-    def install_global_node_modules
-      info("Check for necessary global NPM packages")
-      run_command('which npm') ||
-        error("Node isn't installed. Head to https://nodejs.org/en/download/package-manager")
-
-      global_modules = %w[foreman yarn]
-
-      global_modules.each do |m|
-        global_modules.delete(m) if run_command("npm list -g #{m}")
-      end
-
-      if global_modules.empty?
-        success("Global NPM packages needed by Wordless already installed. Good job!")
-        return true
-      end
-
-      global_modules.each do |m|
-        run_command("npm install -g #{m}") && success("Installed NPM package #{m} globally")
-      end
-      succes("Done!")
     end
   end
 end
