@@ -13,7 +13,7 @@ function log {
 
 log "Deleting {$FIXTURE_PATH}..."
 rm -rf $FIXTURE_PATH
-mkdir $FIXTURE_PATH
+mkdir -p $FIXTURE_PATH
 echo "Done!"
 
 log "Downloading wordless from github..."
