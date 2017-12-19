@@ -53,4 +53,23 @@ RSpec.describe Wordless::WordlessCLI do
       end
     end
   end
+
+  context "#install_global_node_modules" do
+    it "stops execution if node is not installed" do
+      allow_any_instance_of(Wordless::CLIHelper)
+        .to receive(:run_command)
+        .with("which npm")
+        .and_return(false)
+
+      expect do
+        begin
+          wordless_cli.start('test')
+        rescue SystemExit
+        end
+      end
+        .to output(%r{Node isn't installed. Head to https://nodejs.org/en/download/package-manager})
+        .to_stdout
+    end
+    xit "installs global node modules if they are not already installed"
+  end
 end

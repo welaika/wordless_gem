@@ -24,6 +24,7 @@ module Wordless
     end
 
     def start(name)
+      install_global_node_modules
       install_wordpress_and_wp_cli(name)
 
       Dir.chdir(name)
@@ -31,6 +32,8 @@ module Wordless
       install_wordless
       create_and_activate_theme(name)
       set_permalinks
+      success("All done! Now yor're ready to use Wordless")
+      success("Run `cd wp-content/themes/#{name} && yarn && yarn run server` and enjoy :)")
     end
 
     def install_wordless
@@ -116,10 +119,32 @@ module Wordless
 
     def set_permalinks
       at_wordpress_root do
-        info("Setting permalinks for wordless...")
+        info("Setting permalinks...")
         run_command('wp rewrite structure /%postname%/') || error("Cannot set permalinks")
         success("Done!")
       end
+    end
+
+    def install_global_node_modules
+      info("Check for necessary global NPM packages")
+      run_command('which npm') ||
+        error("Node isn't installed. Head to https://nodejs.org/en/download/package-manager")
+
+      global_modules = %w[foreman yarn]
+
+      global_modules.each do |m|
+        global_modules.delete(m) if run_command("npm list -g #{m}")
+      end
+
+      if global_modules.empty?
+        success("Global NPM packages needed by Wordless already installed. Good job!")
+        return true
+      end
+
+      global_modules.each do |m|
+        run_command("npm install -g #{m}") && success("Installed NPM package #{m} globally")
+      end
+      succes("Done!")
     end
   end
 end
