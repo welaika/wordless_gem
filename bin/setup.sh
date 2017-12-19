@@ -13,16 +13,10 @@ function log {
 
 log "Deleting {$FIXTURE_PATH}..."
 rm -rf $FIXTURE_PATH
-mkdir $FIXTURE_PATH
+mkdir -p $FIXTURE_PATH
 echo "Done!"
 
 log "Downloading wordless from github..."
 cd $FIXTURE_PATH
 wget $WORDLESS_ARCHIVE -O - | tar -xz --strip 1
-echo "Done!"
-
-log "Customizing ruby and compass paths..."
-cp -f ../wordless_preferences.php $WORDLESS_PREFERENCES
-perl -p -i -e "s|<RUBY_PATH>|$(which ruby)|" $WORDLESS_PREFERENCES
-perl -p -i -e "s|<COMPASS_PATH>|$(which compass)|" $WORDLESS_PREFERENCES
 echo "Done!"

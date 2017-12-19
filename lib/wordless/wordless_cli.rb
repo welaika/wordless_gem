@@ -15,8 +15,10 @@ module Wordless
       PATH::WORDFILE   => 'Wordfile',
       PATH::WP_CONTENT => 'wp-content',
       PATH::PLUGINS    => 'wp-content/plugins',
-      PATH::THEMES     => 'wp-content/themes',
-    }
+      PATH::THEMES     => 'wp-content/themes'
+    }.freeze
+
+    GLOBAL_NODE_MODULES = %w[foreman yarn].freeze
 
     def initialize(thor, options = {})
       @options = options
@@ -24,14 +26,23 @@ module Wordless
     end
 
     def start(name)
+      install_global_node_modules
       install_wordpress_and_wp_cli(name)
 
       Dir.chdir(name)
 
       install_wordless
-      create_theme(name)
-      activate_theme(name)
+      create_and_activate_theme(name)
       set_permalinks
+
+      Dir.chdir("wp-content/themes/#{name}")
+
+      info("Installing theme's node modules...")
+      run_command("yarn install") || error("Problem installing theme's node modules")
+
+      success("All done! Now yor're ready to use Wordless with following commands:")
+      info("`cd #{name}/wp-content/themes/#{name}`")
+      info("`yarn run server`")
     end
 
     def install_wordless
@@ -49,61 +60,26 @@ module Wordless
       end
     end
 
-    def create_theme(name)
-      at_wordpress_root do
-        if File.directory?(themes_path)
-          if run_command("php #{File.join(lib_dir, 'theme_builder.php')} #{name}")
-            success("Created a new Wordless theme in '#{File.join(themes_path, name)}'.")
-          else
-            error("Couldn't create Wordless theme.")
-          end
-        else
-          error("Directory '#{themes_path}' not found.")
-        end
+    def install_global_node_modules
+      info("Check for necessary global NPM packages")
+      run_command('which npm') ||
+        error("Node isn't installed. Head to https://nodejs.org/en/download/package-manager")
+
+      global_node_modules = GLOBAL_NODE_MODULES.dup
+
+      global_node_modules.reject! do |m|
+        run_command("npm list -g #{m}")
       end
-    end
 
-    def compile
-      at_wordpress_root do
-        if system "php #{File.join(lib_dir, 'compile_assets.php')}"
-          success("Compiled static assets.")
-        else
-          error("Couldn't compile static assets.")
-        end
+      if global_node_modules.empty?
+        success("Global NPM packages needed by Wordless already installed. Good job!")
+        return true
       end
-    end
 
-    def clean
-      at_wordpress_root do
-        if File.directory?(themes_path)
-          static_css = Array(config[:static_css] || Dir['wp-content/themes/*/assets/stylesheets/screen.css'])
-          static_js = Array(config[:static_js] || Dir['wp-content/themes/*/assets/javascripts/application.js'])
-
-          (static_css + static_js).each do |file|
-            FileUtils.rm_f(file) if File.exist?(file)
-          end
-
-          success("Cleaned static assets.")
-        else
-          error("Directory '#{themes_path}' not found.")
-        end
+      global_node_modules.each do |m|
+        run_command("npm install -g #{m}") && success("Installed NPM package #{m} globally")
       end
-    end
-
-    def deploy
-      at_wordpress_root do
-        compile if options['refresh']
-
-        deploy_command = options['command'].presence || config[:deploy_command]
-
-        if deploy_command
-          system("#{deploy_command}")
-        else
-          error("deploy_command not set. Make sure it is included in your Wordfile.")
-        end
-
-        clean if options['refresh']
-      end
+      success("Done!")
     end
 
     private
@@ -115,11 +91,11 @@ module Wordless
     end
 
     def lib_dir
-      @@lib_dir ||= File.expand_path(File.dirname(__FILE__))
+      @lib_dir ||= __dir__
     end
 
     def wordpress_dir(current_dir = Dir.pwd)
-      @wordpress_dir ||= (
+      @wordpress_dir ||= begin
         current_dir = File.expand_path(current_dir)
 
         if File.exist?(File.join(current_dir, wp_content_path))
@@ -129,7 +105,7 @@ module Wordless
         else
           wordpress_dir(upper_dir(current_dir))
         end
-      )
+      end
     end
 
     def last_dir?(directory)
@@ -141,13 +117,13 @@ module Wordless
     end
 
     def config
-      @@config ||= (
+      @config ||= begin
         if File.exist?(wordfile_path)
-          YAML::load(File.open(wordfile_path)).symbolize_keys
+          YAML.safe_load(File.open(wordfile_path)).symbolize_keys
         else
           {}
         end
-      )
+      end
     end
 
     def at_wordpress_root
@@ -164,18 +140,18 @@ module Wordless
       WordPressTools::CLI.new.invoke('new', [name], options)
     end
 
-    def activate_theme(name)
+    def create_and_activate_theme(name)
       at_wordpress_root do
         info("Activating theme...")
-        run_command("wp theme activate #{name}") || error("Cannot activate theme '#{name}'")
+        run_command("wp wordless theme create #{name}") || error("Cannot activate theme '#{name}'")
         success("Done!")
       end
     end
 
     def set_permalinks
       at_wordpress_root do
-        info("Setting permalinks for wordless...")
-        run_command("wp rewrite structure /%postname%/") || error("Cannot set permalinks")
+        info("Setting permalinks...")
+        run_command('wp rewrite structure /%postname%/') || error("Cannot set permalinks")
         success("Done!")
       end
     end

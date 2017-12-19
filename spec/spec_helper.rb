@@ -63,15 +63,13 @@ RSpec.configure do |config|
 
   config.warnings = false
 
-  if config.files_to_run.one?
-    config.default_formatter = "doc"
-  end
+  config.default_formatter = "doc" if config.files_to_run.one?
 
   config.order = :random
 
   config.include WordpressStructure
   config.after(:each) do
-    if Dir.exists?(WordpressStructure::TMP_PATH)
+    if Dir.exist?(WordpressStructure::TMP_PATH)
       FileUtils.rm_rf(Dir.glob("#{WordpressStructure::TMP_PATH}/*"))
     end
   end

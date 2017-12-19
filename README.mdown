@@ -1,16 +1,13 @@
 ![Wordless logo](https://raw.githubusercontent.com/welaika/wordless_gem/master/assets/images/wordless_gem.png)
 
-A command line tool to help manage your [Wordless](http://welaika.github.com/wordless/)-based WordPress sites.
+The quickest CLI tool to setup a new WordPress locally. [Wordless](http://welaika.github.com/wordless/) ready.
 
 [![Build Status](https://semaphoreci.com/api/v1/welaika/wordless_gem/branches/master/badge.svg)](https://semaphoreci.com/welaika/wordless_gem)
 
 ## Premise
 
-This is a ruby-gem, so we expect you have already installed _ruby_; if it isn't
+This is a ruby-gem, so we expect you have already installed _ruby_, since it is there by default on Mac and Linux; if it isn't
 the case, probably you'll like to take a look to [rbenv](https://github.com/sstephenson/rbenv).
-
-Wordless ~~can't~~ can recognize if you are inside a wordpress' dirtree if you ~~won't
-be in the root dir~~ are in any subdirectory, starting from [commit df5e408](https://github.com/welaika/wordless_gem/commit/df5e408fcdcb54cccdf2e08c9a0c1873fbc675c4). ~~so use it from the root dir.~~ Easy peasy.
 
 ## Installation
 
@@ -21,21 +18,20 @@ be in the root dir~~ are in any subdirectory, starting from [commit df5e408](htt
     wordless help
 
     Tasks:
-      wordless clean         # Clean static assets
-      wordless compile       # Compile static assets
-      wordless deploy        # Deploy your WordPress site using the deploy_command defined in your Wordfile
       wordless help [TASK]   # Describe available tasks or one specific task
-      wordless install       # Install the Wordless plugin into an existing WordPress installation
-      wordless new [NAME]    # Download WordPress in specified directory, install the Wordless plugin and create a Wordless theme
-      wordless theme [NAME]  # Create a new Wordless theme NAME
+      wordless new <NAME>    # Download WordPress in specified directory, install the Wordless plugin and create a Wordless theme
 
 #### new
 
-Create a new Wordless-enabled WordPress site in directory `mysite`. This downloads the latest stable release of WordPress (you can also specify a locale):
+Create a new Wordless-enabled WordPress site in directory `NAME`. This downloads the latest stable release of WordPress (you can also specify a locale):
 
     wordless new mysite
 
 ```bash
+> wordless help new
+Usage:
+  wordless new <NAME>
+
 Options:
       [--force]                          # Overwrite existing WP-CLI / WP-CLI Server installation
   -l, [--locale=LOCALE]                  # WordPress locale
@@ -55,76 +51,44 @@ Options:
                                          # Default: http://localhost:8080
 ```
 
-##### caveats
+This command will:
 
-- Default db-password is no password
+* Check if nodejs and necessary global modules are installed
+* Setup a new database
+* Install WP-CLI (prompt if already installed)
+* Download WordPress
+* Configure WordPress
+* Bootstrap and prepare a new Wordless theme
+* Make you a happier developer
 
-#### install
+A super **short video to understand** how much time a new development WordPress site should require to be up and running.
 
-If you already have WordPress installed, you can install the Wordless plugin (this currently installs from the master branch on GitHub):
+https://youtu.be/Tu1xMtMoahk
 
-    wordless install
+## Notes
 
-#### theme
-
-Once Wordless is installed, you can create a new Wordless theme:
-
-    wordless theme mytheme
-
-Note: don't try at home to use `wordless theme .`: it won't work! So call it within
-the `wp-content/themes` dir and pass a theme name as argument.
-
-#### compile
-
-Note: if you have no idea why the need to compile assets, you should read the
-Wordless' README.
-
-Compile your site's static assets:
-
-    wordless compile
-
-#### clean
-
-Clean your compiled static assets:
-
-    wordless clean
-
-#### deploy
-
-Deploy your wordless installation using the `deploy_command` specified in your Wordfile:
-
-    wordless deploy
-
-You can also use the refresh option `-r` to compile your assets before deploying and clean your assets after:
-
-    wordless deploy -r
-
-## Configuration
-
-You can, **optionally**, create a `Wordfile` to customize the behaviour of wordless:
-
-```yaml
-wordless_repo: 'git://github.com/welaika/wordless.git'
-static_css:
-  - 'wp-content/themes/mytheme/assets/stylesheets/screen.css'
-  - 'wp-content/themes/mytheme/assets/stylesheets/print.css'
-static_js:
-  - 'wp-content/themes/mytheme/assets/javascripts/application.js'
-  - 'wp-content/themes/mytheme/assets/javascripts/mobile.js'
-deploy_command: 'wordmove push -t'
-```
-
-**Note**: remember to add `screen.css` and/or `application.js` if you want to define `static_css` or `static_js`
-
-## Caveats
-
+- Be sure to have MySQL running before start the installation process: we have to create a database
+- Default db-password is no password. Use the `--db-password=` option if you have one
+- If a DB with the same name is already present, we will give up. Sorry.
 - If you attempt to download a WordPress localization that's outdated, the latest English version will be downloaded instead.
 - Not tested on Windows
+
+## Wordless < 2 ?
+
+If you are still working with an old Wordless theme and you need the ruby-releated features
+of the `wordless` gem, you need to install the last version 1.x version released
+
+```
+gem uninstall wordless
+gem install wordless -v '1.1.6'
+```
+
+and you can read the old README [here](https://github.com/welaika/wordless_gem/tree/v1.1.2)
 
 ## Running specs
 
 ```bash
-bundle install && ./setup_tests.sh && rspec
+bundle install && ./bin/setup.sh && rspec
 ```
 
 We've noticed problems running tests while using `rvm`; all of them solved using `rbenv`.

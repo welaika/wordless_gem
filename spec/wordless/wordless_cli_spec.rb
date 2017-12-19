@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Wordless::WordlessCLI do
-  let(:cli_options) do {} end
+  let(:cli_options) { {} }
   let(:wordless_cli) { described_class.new(Thor.new, cli_options) }
 
   before do
@@ -11,13 +11,13 @@ RSpec.describe Wordless::WordlessCLI do
   context "without a valid wordpress folder" do
     it "fails and return a message" do
       in_wordpress_path do
-        expect{ wordless_cli.install_wordless }.to raise_error(SystemExit)
+        expect { wordless_cli.install_wordless }.to raise_error(SystemExit)
         expect do
           begin
             wordless_cli.install_wordless
           rescue SystemExit
           end
-        end.to output(%r|Could not find a valid Wordpress directory|).to_stdout
+        end.to output(/Could not find a valid Wordpress directory/).to_stdout
       end
     end
   end
@@ -29,25 +29,13 @@ RSpec.describe Wordless::WordlessCLI do
 
     it "fails to install the Wordless plugin" do
       in_wordpress_path do
-        expect{ wordless_cli.install_wordless }.to raise_error(SystemExit)
+        expect { wordless_cli.install_wordless }.to raise_error(SystemExit)
         expect do
           begin
             wordless_cli.install_wordless
           rescue SystemExit
           end
-        end.to output(%r|Directory 'wp-content/plugins' not found|).to_stdout
-      end
-    end
-
-    it "fails to create a Wordless theme" do
-      in_wordpress_path do
-        expect{ wordless_cli.install_wordless }.to raise_error(SystemExit)
-        expect do
-          begin
-            wordless_cli.create_theme("mytheme")
-          rescue SystemExit
-          end
-        end.to output(%r|Directory 'wp-content/themes' not found|).to_stdout
+        end.to output(%r{Directory 'wp-content/plugins' not found}).to_stdout
       end
     end
   end
@@ -57,141 +45,70 @@ RSpec.describe Wordless::WordlessCLI do
 
     it "installs the Wordless plugin" do
       in_wordpress_path do
-        expect(wordless_cli).to receive(:run_command).with("wp plugin install wordless --activate").and_return(true)
+        expect(wordless_cli)
+          .to receive(:run_command)
+          .with("wp plugin install wordless --activate")
+          .and_return(true)
         wordless_cli.install_wordless
       end
     end
   end
 
-  context "#create_theme" do
-    before do
-      make_all_wordpress_paths!
-      install_wordless!
-    end
+  context "#install_global_node_modules" do
+    it "stops execution if node is not installed" do
+      allow_any_instance_of(Wordless::CLIHelper)
+        .to receive(:run_command)
+        .with("which npm")
+        .and_return(false)
 
-    it "creates a Wordless theme" do
-      in_wordpress_path do
-        wordless_cli.create_theme("mytheme")
-        expect(File.directory?('wp-content/themes/mytheme')).to eq(true)
-        expect(File.exist?('wp-content/themes/mytheme/index.php')).to eq(true)
-      end
-    end
-  end
-
-  context "#compile" do
-    let(:compiled_css) { 'wp-content/themes/mytheme/assets/stylesheets/screen.css' }
-    let(:compiled_js) { 'wp-content/themes/mytheme/assets/javascripts/application.js' }
-
-    before do
-      make_all_wordpress_paths!
-      install_wordless!
-      in_wordpress_path do
-        wordless_cli.create_theme("mytheme")
-      end
-    end
-
-    it "compiles static assets" do
-      in_wordpress_path do
-        wordless_cli.compile
-
-        expect(File.exist?(compiled_css)).to eq(true)
-        expect(File.exist?(compiled_js)).to eq(true)
-
-        expect(File.readlines(compiled_css).grep(/html{line-height:1}/)).to_not be_empty
-        expect(File.readlines(compiled_js).grep(/return "Yep, it works!";/)).to_not be_empty
-      end
-    end
-  end
-
-  context "#clean" do
-    let(:default_css) { 'wp-content/themes/mytheme/assets/stylesheets/screen.css' }
-    let(:default_js) { 'wp-content/themes/mytheme/assets/javascripts/application.js' }
-
-    let(:first_css)  { 'wp-content/themes/mytheme/assets/stylesheets/foo.css' }
-    let(:second_css) { 'wp-content/themes/mytheme/assets/stylesheets/bar.css' }
-    let(:first_js)   { 'wp-content/themes/mytheme/assets/javascripts/robin.js' }
-    let(:second_js)  { 'wp-content/themes/mytheme/assets/javascripts/galahad.js' }
-
-    before do
-      make_all_wordpress_paths!
-      in_wordpress_path do
-        FileUtils.mkdir_p('wp-content/themes/mytheme/assets/stylesheets')
-        FileUtils.mkdir_p('wp-content/themes/mytheme/assets/javascripts')
-      end
-    end
-
-    it "should remove default default assets" do
-      in_wordpress_path do
-        FileUtils.touch(default_css)
-        FileUtils.touch(default_js)
-        Wordless::WordlessCLI.class_variable_set :@@config, {}
-
-        wordless_cli.clean
-
-        expect(File.exist?(default_js)).to eq(false)
-        expect(File.exist?(default_css)).to eq(false)
-      end
-    end
-
-    it "should remove assets specified on config" do
-      in_wordpress_path do
-        Wordless::WordlessCLI.class_variable_set :@@config, {
-          static_css: [ first_css, second_css ],
-          static_js:  [ first_js, second_js ]
-        }
-
-        [ first_css, second_css, first_js, second_js ].each do |file|
-          FileUtils.touch(file)
-        end
-
-        wordless_cli.clean
-
-        [ first_css, second_css, first_js, second_js ].each do |file|
-          expect(File.exist?(file)).to eq(false)
+      expect do
+        begin
+          wordless_cli.start('test')
+        rescue SystemExit
         end
       end
-    end
-  end
-
-  context "#deploy" do
-    let(:file) { 'shrubbery.txt' }
-
-    before do
-      make_all_wordpress_paths!
-      Wordless::WordlessCLI.class_variable_set :@@config, {
-        deploy_command: "touch #{file}"
-      }
+        .to output(%r{Node isn't installed. Head to https://nodejs.org/en/download/package-manager})
+        .to_stdout
     end
 
-    it "should deploy via the deploy command" do
-      in_wordpress_path do
-        wordless_cli.deploy
-        expect(File.exist?(file)).to eq(true)
+    it "checks if global node modules are already installed" do
+      allow_any_instance_of(Wordless::CLIHelper)
+        .to receive(:run_command)
+        .with("which npm")
+        .and_return(true)
+      described_class::GLOBAL_NODE_MODULES.each do |m|
+        allow_any_instance_of(Wordless::CLIHelper)
+          .to receive(:run_command)
+          .with("npm list -g #{m}")
+          .and_return(true)
       end
+
+      expect { wordless_cli.install_global_node_modules }
+        .to output(/Global NPM packages needed by Wordless already installed. Good job!/)
+        .to_stdout
     end
 
-    context "refresh" do
-      let(:cli_options) do { "refresh" => true } end
+    it "installs global node modules it they are not already" do
+      allow_any_instance_of(Wordless::CLIHelper)
+        .to receive(:run_command)
+        .with("which npm")
+        .and_return(true)
+      allow_any_instance_of(Wordless::CLIHelper)
+        .to receive(:run_command)
+        .with("npm list -g foreman")
+        .and_return(true)
+      allow_any_instance_of(Wordless::CLIHelper)
+        .to receive(:run_command)
+        .with("npm list -g yarn")
+        .and_return(false)
+      allow_any_instance_of(Wordless::CLIHelper)
+        .to receive(:run_command)
+        .with("npm install -g yarn")
+        .and_return(true)
 
-      it "should compile and clean if refresh option is passed" do
-        in_wordpress_path do
-          expect(wordless_cli).to receive(:compile).and_return(true)
-          expect(wordless_cli).to receive(:clean).and_return(true)
-          wordless_cli.deploy
-        end
-      end
-    end
-
-    context "custom deploy command" do
-      let(:file) { 'knights.txt' }
-      let(:options) do { "command" => "touch #{file}" } end
-
-      it "should launch the custom deploy command" do
-        in_wordpress_path do
-          wordless_cli.deploy
-          expect(File.exist?(file)).to eq(true)
-        end
-      end
+      expect { wordless_cli.install_global_node_modules }
+        .to output(/Installed NPM package yarn globally/)
+        .to_stdout
     end
   end
 end
