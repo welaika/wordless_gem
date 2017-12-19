@@ -58,12 +58,12 @@ This command will:
 * Install WP-CLI (prompt if already installed)
 * Download WordPress
 * Configure WordPress
-* Bootstrap and prepare a new wordless theme
+* Bootstrap and prepare a new Wordless theme
 * Make you a happier developer
 
-A super **short video to understand** how much time a new development WordPress site should require to be up and runnig.
+A super **short video to understand** how much time a new development WordPress site should require to be up and running.
 
-https://cl.ly/2y3V0L1i3N3X
+https://youtu.be/Tu1xMtMoahk
 
 ## Notes
 
@@ -82,6 +82,8 @@ of the `wordless` gem, you need to install the last version 1.x version released
 gem uninstall wordless
 gem install wordless -v '1.1.6'
 ```
+
+and you can read the old README [here](https://github.com/welaika/wordless_gem/tree/v1.1.2)
 
 ## Running specs
 
