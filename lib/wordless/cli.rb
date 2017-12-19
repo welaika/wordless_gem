@@ -9,7 +9,7 @@ module Wordless
       end
     end
 
-    desc "new [NAME]", "Download WordPress in specified directory,
+    desc "new <NAME>", "Download WordPress in specified directory,
                         install the Wordless plugin and create a Wordless theme"
     add_method_options(shared_options)
     method_option :bare,
