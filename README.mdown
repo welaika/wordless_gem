@@ -97,7 +97,7 @@ the CI tool to _sempaphore_, which use rbenv, so pull requests will be tested in
 environement.
 
 ## Need more tools?
-Visit [Wordpress Tools](http://wptools.it).
+Visit [Wordpress Tools](https://www.wptools.it).
 
 ## Contributing
 
@@ -110,4 +110,4 @@ Visit [Wordpress Tools](http://wptools.it).
 
 ## Author
 
-made with ❤️ and ☕️ by [weLaika](http://dev.welaika.com)
+made with ❤️ and ☕️ by [weLaika](https://dev.welaika.com)
