@@ -111,3 +111,9 @@ Visit [Wordpress Tools](https://www.wptools.it).
 ## Author
 
 made with ❤️ and ☕️ by [weLaika](https://dev.welaika.com)
+
+## License
+
+(The MIT License)
+
+Copyright © 2012-2018 [weLaika](https://dev.welaika.com)
