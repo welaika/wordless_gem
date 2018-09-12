@@ -62,7 +62,7 @@ module Wordless
 
     def install_global_node_modules
       info("Check for necessary global NPM packages")
-      run_command('which npm') ||
+      which('npm') ||
         error("Node isn't installed. Head to https://nodejs.org/en/download/package-manager")
 
       global_node_modules = GLOBAL_NODE_MODULES.dup
@@ -154,6 +154,19 @@ module Wordless
         run_command('wp rewrite structure /%postname%/') || error("Cannot set permalinks")
         success("Done!")
       end
+    end
+
+    def which(cmd)
+      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+
+      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+        exts.each do |ext|
+          exe = File.join(path, "#{cmd}#{ext}")
+          return exe if File.executable?(exe) && !File.directory?(exe)
+        end
+      end
+
+      nil
     end
   end
 end
