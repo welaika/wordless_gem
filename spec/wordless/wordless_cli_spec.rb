@@ -56,9 +56,9 @@ RSpec.describe Wordless::WordlessCLI do
 
   context "#install_global_node_modules" do
     it "stops execution if node is not installed" do
-      allow_any_instance_of(Wordless::CLIHelper)
-        .to receive(:run_command)
-        .with("which npm")
+      allow_any_instance_of(Wordless::WordlessCLI)
+        .to receive(:which)
+        .with("npm")
         .and_return(false)
 
       expect do
