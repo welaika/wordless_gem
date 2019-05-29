@@ -51,8 +51,9 @@ module Wordless
       info("Installing and activating plugin...")
 
       at_wordpress_root do
+        github_url = 'https://github.com/welaika/wordless/archive/master.zip'
         error("Directory '#{plugins_path}' not found.") unless File.directory?(plugins_path)
-        if run_command("wp plugin install wordless --activate")
+        if run_command("wp plugin install #{github_url} --activate")
           success("Done!")
         else
           error("There was an error installing and/or activating the Wordless plugin.")
