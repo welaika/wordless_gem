@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 
 require "priscilla"
 require "pry-byebug"
@@ -6,7 +6,7 @@ require "pry-byebug"
 require "wordless"
 
 module WordpressStructure
-  TMP_PATH = File.expand_path("../../tmp/", __FILE__).freeze
+  TMP_PATH = File.expand_path('../tmp', __dir__).freeze
   WORDPRESS_PATH = File.join(TMP_PATH, "wordpress").freeze
 
   def make_all_wordpress_paths!
@@ -34,7 +34,7 @@ module WordpressStructure
 
   def install_wordless!
     FileUtils.cp_r(
-      File.expand_path("../fixtures/wordless", __FILE__),
+      File.expand_path('fixtures/wordless', __dir__),
       File.join(WORDPRESS_PATH, "wp-content", "plugins")
     )
   end
