@@ -12,10 +12,10 @@ module Wordless
     end
 
     DEFAULT_PATHS = {
-      PATH::WORDFILE   => 'Wordfile',
+      PATH::WORDFILE => 'Wordfile',
       PATH::WP_CONTENT => 'wp-content',
-      PATH::PLUGINS    => 'wp-content/plugins',
-      PATH::THEMES     => 'wp-content/themes'
+      PATH::PLUGINS => 'wp-content/plugins',
+      PATH::THEMES => 'wp-content/themes'
     }.freeze
 
     GLOBAL_NODE_MODULES = %w[foreman yarn].freeze

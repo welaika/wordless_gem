@@ -7,7 +7,7 @@ module Wordless
         define_method sym do |*args|
           thor.send(sym, *args)
         end
-        private sym
+        private sym # rubocop:disable Style/AccessModifierDeclarations
       end
     end
 
