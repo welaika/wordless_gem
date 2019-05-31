@@ -40,14 +40,15 @@ RSpec.describe Wordless::WordlessCLI do
     end
   end
 
-  context "installing wordless" do
+  context "installing wordless from github" do
     before { make_all_wordpress_paths! }
+    let(:worldess_url) { 'https://github.com/welaika/wordless/archive/master.zip' }
 
     it "installs the Wordless plugin" do
       in_wordpress_path do
         expect(wordless_cli)
           .to receive(:run_command)
-          .with("wp plugin install wordless --activate")
+          .with("wp plugin install #{worldess_url} --activate")
           .and_return(true)
         wordless_cli.install_wordless
       end
