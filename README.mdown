@@ -2,8 +2,6 @@
 
 The quickest CLI tool to setup a new WordPress locally. [Wordless](https://github.com/welaika/wordless) ready.
 
-[![Build Status](https://semaphoreci.com/api/v1/welaika/wordless_gem/branches/master/badge.svg)](https://semaphoreci.com/welaika/wordless_gem)
-
 ## Premise
 
 This is a ruby-gem, so we expect you have already installed _ruby_, since it is there by default on Mac and Linux; if it isn't

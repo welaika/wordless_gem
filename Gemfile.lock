@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wordless (2.1.1)
+    wordless (2.2.0)
       activesupport
       thor (~> 0.19.1)
       wordpress_tools (~> 1.4.1)
