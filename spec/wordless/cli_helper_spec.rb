@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-RSpec.describe Wordless::CLIHelper do
-  class MyClass
-    include Wordless::CLIHelper
+class MyClass
+  include Wordless::CLIHelper
 
-    def thor
-      @thor ||= Thor.new
-    end
+  def thor
+    @thor ||= Thor.new
   end
+end
 
+RSpec.describe Wordless::CLIHelper do
   let(:subject) { MyClass.new }
 
   context "#error" do

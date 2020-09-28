@@ -1,6 +1,5 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 
-require "priscilla"
 require "pry-byebug"
 
 require "wordless"
