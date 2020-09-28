@@ -18,14 +18,14 @@ module Wordless
       PATH::THEMES => 'wp-content/themes'
     }.freeze
 
-    GLOBAL_NODE_MODULES = %w[foreman yarn].freeze
+    GLOBAL_NODE_MODULES = %w[yarn].freeze
 
     def initialize(thor, options = {})
       @options = options
       @thor = thor
     end
 
-    def start(name)
+    def start(name) # rubocop:disable Metrics/MethodLength
       install_global_node_modules
       install_wordpress_and_wp_cli(name)
 
@@ -37,8 +37,19 @@ module Wordless
 
       Dir.chdir("wp-content/themes/#{name}")
 
-      info("Installing theme's node modules...")
-      run_command("yarn install") || error("Problem installing theme's node modules")
+      info('Activate the right node version using NVM')
+      if run_command('$SHELL -l -c "nvm use"')
+        info("Installing theme's node modules...")
+        run_command('$SHELL -l -c "nvm use && yarn setup"') ||
+          error("Problem installing theme's node modules")
+      else
+        warning(
+          'NVM or the required node version is not installed. ' \
+          'Will try to continue using global node.'
+        )
+        info("Installing theme's node modules...")
+        run_command("yarn setup") || error("Problem installing theme's node modules")
+      end
 
       success("All done! Now yor're ready to use Wordless with following commands:")
       info("`cd #{name}/wp-content/themes/#{name}`")

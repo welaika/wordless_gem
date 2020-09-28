@@ -9,6 +9,15 @@ The quickest CLI tool to setup a new WordPress locally. [Wordless](https://githu
 This is a ruby-gem, so we expect you have already installed _ruby_, since it is there by default on Mac and Linux; if it isn't
 the case, probably you'll like to take a look to [rbenv](https://github.com/sstephenson/rbenv).
 
+## Prerequisites
+
+The only prerequisite that's up to you is to have the right version of node installed.
+Refer to https://wordless.readthedocs.io/en/latest/_pages/stack/node.html#node for the documentation.
+
+The gem will try to `nvm use` into the theme during the process. If it won't work, it will fallback using global
+node version. If your global available node version won't match the required one, then the
+process will fail due to `yarn` compelling about version mismatch.
+
 ## Installation
 
     gem install wordless
