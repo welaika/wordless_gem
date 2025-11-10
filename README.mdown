@@ -1,5 +1,16 @@
 ![Wordless logo](https://raw.githubusercontent.com/welaika/wordless_gem/master/assets/images/wordless_gem.png)
 
+![unmaintained](https://img.shields.io/badge/status-unmaintained-red)
+
+> ## **⚠️ This repository has been archived and is no longer actively maintained.**
+>
+>
+> ### What this means:
+>
+> - No further updates, bug fixes, or security patches will be provided.
+> - Issues and pull requests will not be addressed.
+> - Use this code at your own risk.
+
 The quickest CLI tool to setup a new WordPress locally. [Wordless](https://github.com/welaika/wordless) ready.
 
 ## Premise
